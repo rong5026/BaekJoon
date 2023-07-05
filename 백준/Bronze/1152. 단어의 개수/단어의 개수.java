@@ -1,19 +1,20 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) {
-        String result;
+    public static void main(String[] args) throws IOException {
 
-        Scanner input = new Scanner(System.in);
-        result = input.nextLine().trim();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        if (result.isEmpty()) {
-            System.out.println("0");
+        long cnt = 0;
+
+        while (st.hasMoreTokens()) {
+            st.nextToken();
+            cnt++;
         }
-        else {
-            System.out.println(result.split(" ").length);
-        }
-
-        input.close();
+        System.out.println(cnt);
     }
 }
