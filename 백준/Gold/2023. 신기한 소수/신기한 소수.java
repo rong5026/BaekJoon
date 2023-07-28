@@ -21,6 +21,8 @@ public class Main {
             return ;
         }
         for(int k = 1 ; k < 10 ; k++) {
+            if (k % 2 == 0)
+                continue;
             if (isPrime(num * 10 + k))
                 DFS(num * 10 + k, i + 1, n);
         }
