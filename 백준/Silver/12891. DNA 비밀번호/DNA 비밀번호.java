@@ -1,87 +1,84 @@
-import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.Buffer;
-import java.sql.Array;
-import java.util.*;
-
-
+import javax.print.DocFlavor;
+import java.io.*;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        String [] input = br.readLine().split(" ");
-
-        int n = Integer.parseInt(input[0]);
-        int m = Integer.parseInt(input[1]);
-
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        char [] charArr = st.nextToken().toCharArray();
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
 
         st = new StringTokenizer(br.readLine());
 
-        int [] intArr = new int[4];
+        char charArr[] = st.nextToken().toCharArray();
+        int intArr[] = new int[4];
 
-        for(int i = 0 ; i < 4 ; i++) {
+        st = new StringTokenizer(br.readLine());
+
+        for (int i = 0 ; i < 4 ; i++) {
             intArr[i] = Integer.parseInt(st.nextToken());
         }
 
+        int sumArr[] = new int[4];
 
-        int [] sumArr = new int[4];
-
-        for(int i = 0 ; i < m ; i++){
-            if(charArr[i] == 'A')
+        for (int i = 0 ; i < m ; i++) {
+            if (charArr[i] == 'A')
                 sumArr[0]++;
-            else if(charArr[i] == 'C')
+            else if (charArr[i] == 'C')
                 sumArr[1]++;
-            else if(charArr[i] == 'G')
+            else if (charArr[i] == 'G')
                 sumArr[2]++;
-            else if(charArr[i] == 'T')
+            else if (charArr[i] == 'T')
                 sumArr[3]++;
         }
 
-        int i = 0;
-        int resultCnt = 0;
-        while (i <= n - m) {
+        int count = 0;
 
-            boolean isCheck = true;
-            for(int j = 0 ; j < 4 ; j++){
-               if ( sumArr[j] < intArr[j]){
-                   isCheck = false;
-                   break;
-               }
+        int i = 0;
+        while (i++ <= n - m) {
+
+            // 유효성 검증
+            boolean finish = true;
+            for (int j = 0 ; j < 4 ; j++) {
+                if (sumArr[j] < intArr[j]) {
+                    finish = false;
+                    break;
+                }
             }
-            if(isCheck) {
-                resultCnt++;
+            if(finish) {
+                count++;
             }
-            // remove
-            if(charArr[i] == 'A')
+
+            // 앞에꺼 빼기
+            if (charArr[i - 1] == 'A')
                 sumArr[0]--;
-            else if(charArr[i] == 'C')
+            else if (charArr[i - 1] == 'C')
                 sumArr[1]--;
-            else if(charArr[i] == 'G')
+            else if (charArr[i - 1] == 'G')
                 sumArr[2]--;
-            else if(charArr[i] == 'T')
+            else if (charArr[i - 1] == 'T')
                 sumArr[3]--;
 
-            if(i != n - m) {
-                //add
-                if(charArr[i+m] == 'A')
+            // 이동시 포함된 배열값 추가
+            if (i != n - m + 1) {
+                if (charArr[i + m - 1] == 'A')
                     sumArr[0]++;
-                else if(charArr[i+m] == 'C')
+                else if (charArr[i + m - 1] == 'C')
                     sumArr[1]++;
-                else if(charArr[i+m] == 'G')
+                else if (charArr[i + m - 1] == 'G')
                     sumArr[2]++;
-                else if(charArr[i+m] == 'T')
+                else if (charArr[i + m - 1] == 'T')
                     sumArr[3]++;
             }
-
-            i++;
         }
-        System.out.println(resultCnt);
+
+        System.out.println(count);
+
+
     }
 }
