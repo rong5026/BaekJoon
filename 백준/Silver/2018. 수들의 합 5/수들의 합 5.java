@@ -1,43 +1,36 @@
-import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.Buffer;
-import java.sql.Array;
-import java.util.*;
-
-
+import javax.print.DocFlavor;
+import java.io.*;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int n = Integer.parseInt(br.readLine());
+       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int start = 1;
-        int last = 1;
+       int n = Integer.parseInt(br.readLine());
 
-        int sum = 1;
-        int cnt = 1;
-        while(last != n) {
+       int start = 1;
+       int last = 1;
+       long sum = 1;
+       int count = 1;
 
-            if (sum <= n) {
-                if (sum == n)
-                    cnt++;
-                last++;
-                sum += last;
+       while (last != n) {
 
-            }
-            else if (sum > n ){
-                sum -= start;
-                start++;
-            }
-        }
-        System.out.println(cnt);
-
-
-
-
+           if (sum <= n) {
+               if (sum == n) {
+                   count++;
+               }
+               last++;
+               sum += last;
+           }
+           else {
+               sum -= start;
+               start++;
+           }
+       }
+        System.out.println(count);
     }
 }
