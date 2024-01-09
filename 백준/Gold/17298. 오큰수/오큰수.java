@@ -1,10 +1,9 @@
-import javax.swing.*;
+import javax.print.DocFlavor;
 import java.io.*;
-import java.nio.Buffer;
-import java.sql.Array;
-import java.util.*;
-
-
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.Stack;
+import java.util.StringTokenizer;
 
 public class Main {
 
@@ -15,40 +14,36 @@ public class Main {
 
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int [] arr = new int[n];
+        int arr[] = new int[n];
+        int result[] = new int[n];
 
-        for(int i = 0 ; i < n ; i++) {
+        for (int i = 0 ; i < n ; i++) {
             arr[i] = Integer.parseInt(st.nextToken());
         }
+        Stack<Integer> stack = new Stack<Integer>();
 
-        Stack<Integer> stack = new Stack<>();
+        stack.push(0);
 
-        int []result = new int[n];
+        for (int i = 1 ; i < n ; i++) {
 
-        for(int i = 0 ; i < n ; i++) {
+            while (!stack.isEmpty() && arr[i] > arr[stack.peek()]) {
 
-            if(stack.isEmpty()){
-                stack.push(i);
+                int index = stack.pop();
+                result[index] = arr[i];
             }
-            else {
-
-                while(!stack.isEmpty() && arr[stack.peek()] < arr[i]) {
-                    result[stack.pop()] = arr[i];
-                }
-                stack.push(i);
-            }
+            stack.push(i);
         }
 
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
-        for(int i = 0 ; i < n ; i++) {
-            if (result[i] == 0)
-                bw.write("-1 ");
-            else
-                bw.write(result[i] + " ");
+        while (!stack.isEmpty()) {
+            int index = stack.pop();
+            result[index] = -1;
         }
-        bw.write("\n");
-        bw.flush();
-        bw.close();
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0 ; i < n ; i++)
+            sb.append(result[i]).append(" ");
+
+        System.out.println(sb.toString());
     }
 }
