@@ -1,53 +1,51 @@
-import javax.swing.*;
+import javax.print.DocFlavor;
 import java.io.*;
-import java.nio.Buffer;
-import java.sql.Array;
-import java.util.*;
-
-
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.Stack;
+import java.util.StringTokenizer;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        Scanner input = new Scanner(System.in);
+        int n = Integer.parseInt(br.readLine());
+        int array[] = new int[n];
 
-        int n = input.nextInt();
-
-        int [] arr = new int[n];
-
-        for(int i = 0 ; i < n ; i++)
-            arr[i] = input.nextInt();
-
-        int cnt = 1;
-        boolean isResult = true;
+        for (int i = 0 ; i < n ; i++) {
+            array[i] = Integer.parseInt(br.readLine());
+        }
 
         Stack<Integer> stack = new Stack<Integer>();
 
         StringBuilder sb = new StringBuilder();
 
-        for(int i = 0 ; i < n ; i++) {
+        int cnt = 1;
+        boolean result = true;
 
-            while (arr[i] >= cnt) {
+        for (int i = 0 ; i < n ; i++) {
+
+            while (array[i] >= cnt) {
                 stack.push(cnt);
-                sb.append("+\n");
                 cnt++;
+                sb.append("+\n");
             }
+
             int elem = stack.pop();
 
-            if(elem != arr[i]){
+            if (elem == array[i]) {
+                sb.append("-\n");
+            }
+            else {
                 System.out.println("NO");
-                isResult = false;
+                result = false;
                 break;
             }
-            else
-                sb.append("-\n");
         }
 
-        if(isResult){
+        if (result)
             System.out.println(sb.toString());
-        }
-
 
     }
 }
