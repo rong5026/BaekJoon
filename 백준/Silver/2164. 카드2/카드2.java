@@ -1,10 +1,6 @@
-import javax.swing.*;
+import javax.print.DocFlavor;
 import java.io.*;
-import java.nio.Buffer;
-import java.sql.Array;
 import java.util.*;
-
-
 
 public class Main {
 
@@ -15,18 +11,15 @@ public class Main {
         int n = input.nextInt();
         Queue<Integer> queue = new LinkedList<>();
 
-        for(int i = 1 ; i <= n ; i++) {
+        for (int i = 1 ; i <= n ; i++) {
             queue.add(i);
         }
-        int i = 0;
-        while(queue.size() != 1){
-            int m = queue.poll();
 
-            if (i % 2 == 1)
-                queue.add(m);
-
-            i++;
+        while (queue.size() > 1) {
+            queue.poll();
+            queue.add(queue.poll());
         }
-        System.out.println(queue.peek());
+
+        System.out.println(queue.poll());
     }
 }
