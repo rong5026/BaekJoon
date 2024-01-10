@@ -1,36 +1,24 @@
-import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.Buffer;
-import java.sql.Array;
-import java.util.*;
+import java.io.*;
+import java.util.Arrays;
 
 
 
 public class Main {
 
+
     public static void main(String[] args) throws IOException {
-
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String str = br.readLine();
+        char charArray[] = br.readLine().toCharArray();
 
-        String[] arr= str.split("");
+        Arrays.sort(charArray);
 
-        Arrays.sort(arr, Collections.reverseOrder());;
-
-        StringBuilder sb = new StringBuilder();
-
-        for(String s : arr) {
-            sb.append(s);
+        for (int i =  charArray.length -1 ; i >=0 ; i--) {
+            bw.write(charArray[i]);
         }
-
-        System.out.println(sb);
-
-
-
+        bw.flush();
+        bw.close();
 
     }
 }
