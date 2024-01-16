@@ -1,83 +1,82 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
+
 
 public class Main {
 
-    public static void DFS(ArrayList<Integer> list[], int visit[], int index) {
 
-        if(visit[index] != 0)
+    public static void DFS(ArrayList<Integer> list[], int index, int isVisited[]) {
+        if (isVisited[index] == 1)
             return ;
 
-        visit[index] = 1;
-
+        isVisited[index] = 1;
         System.out.print(index + " ");
 
-        for(int i : list[index]) {
-            if(visit[i] == 0)
-                DFS(list, visit, i);
+        for (int i : list[index]) {
+            if (isVisited[i] == 0)
+                DFS(list, i, isVisited);
         }
     }
 
-    public static void BFS(ArrayList<Integer> list[] , int visit[], int index) {
+    public static void BFS(ArrayList<Integer> list[], int index, int isVisited[]) {
 
-        Queue<Integer> queue = new LinkedList<Integer>();
+        Queue<Integer> queue = new LinkedList<>();
 
         queue.add(index);
+        isVisited[index] = 1;
 
-        visit[index] = 1;
-
-        while(!queue.isEmpty()) {
+        while (!queue.isEmpty()) {
             int tmp = queue.poll();
+
             System.out.print(tmp + " ");
 
-            for(int i : list[tmp]) {
-                if(visit[i] == 0){
+            for (int i : list[tmp]) {
+                if (isVisited[i] == 0) {
+                    isVisited[i] = 1;
                     queue.add(i);
-                    visit[i] = 1;
                 }
             }
         }
+
     }
 
     public static void main(String[] args) throws IOException {
-
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String str[] = br.readLine().split(" ");
+        String input[] = br.readLine().split(" ");
 
-        int n = Integer.parseInt(str[0]);
-        int m = Integer.parseInt(str[1]);
-        int k = Integer.parseInt(str[2]);
+        int n = Integer.parseInt(input[0]);
+        int m = Integer.parseInt(input[1]);
+        int start = Integer.parseInt(input[2]);
 
         ArrayList<Integer> list[] = new ArrayList[n + 1];
 
-        for(int i = 1; i <= n ; i++) {
+        for (int i = 1; i <= n ; i++) {
             list[i] = new ArrayList<>();
         }
 
-        for(int i = 0 ; i < m ; i++) {
+        for (int i = 1 ; i <= m ; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
 
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-            list[a].add(b);
-            list[b].add(a);
+            int first = Integer.parseInt(st.nextToken());
+            int second = Integer.parseInt(st.nextToken());
+
+            list[first].add(second);
+            list[second].add(first);
         }
 
-        for(int i = 1 ; i <= n ; i++){
+        for (int i = 1 ; i <= n ; i++) {
             Collections.sort(list[i]);
         }
 
-        int visit[] = new int[n + 1];
+        int isVisited[] = new int[n + 1];
 
-        DFS(list, visit, k);
-        System.out.println("");
+        DFS(list, start, isVisited);
+        System.out.println();
 
-        visit = new int[n + 1];
-
-        BFS(list, visit, k);
-
+        isVisited = new int[n + 1];
+        BFS(list, start, isVisited);
+        System.out.println();
     }
 }
