@@ -1,63 +1,82 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import org.w3c.dom.Node;
+
+import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
+
 
 public class Main {
 
-    static boolean arr2[][];
-    static int n;
-    static int m;
+    public static void DFS(int map[][], boolean isVisited[][], Node input) {
 
-    static int[] dx = {0, 1, 0 , -1};
-    static int[] dy = {1, 0, -1, 0};
-    public static void DFS(int list[][], int i, int j) {
-        Queue<int[]> queue = new LinkedList<>();
+        int dx[] = {0, 1, 0 , -1};
+        int dy[] = {1, 0, -1, 0};
 
-        queue.add(new int[] {i,j});
-        arr2[i][j] = true;
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(new Node(0,0));
+        isVisited[0][0] = true;
 
-        while(!queue.isEmpty()) {
-            int now[] = queue.poll();
-            for(int k = 0 ; k < 4 ; k++){
-                int x = now[0] + dx[k];
-                int y = now[1] + dy[k];
+        while (!queue.isEmpty()) {
+            Node now = queue.poll();
 
-                if (x >= 0 && x < n && y>=0 && y < m) {
-                    if(arr2[x][y] == false && list[x][y] != 0) {
-                        arr2[x][y] = true;
-                        list[x][y] = list[now[0]][now[1]] + 1;
-                        queue.add(new int[] {x, y});
+            for (int i = 0 ; i < 4 ; i++) {
+                int x = now.x + dx[i];
+                int y = now.y + dy[i];
+
+                if ((x >= 0 && x < input.x) && (y >= 0 && y < input.y)) {
+                    if (isVisited[x][y] == false && map[x][y] == 1) {
+                        isVisited[x][y] = true;
+                        map[x][y] = map[now.x][now.y] + 1;
+                        queue.add(new Node(x, y));
                     }
                 }
             }
+
         }
     }
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
+    public static class Node {
+        int x;
+        int y;
 
-        int arr[][] = new int[n][m];
-        arr2 = new boolean[n][m];
-
-        for(int i = 0 ; i < n ; i++) {
-            st = new StringTokenizer(br.readLine());
-            String a = st.nextToken();
-            for(int j = 0 ; j < m ; j++) {
-                arr[i][j] = Integer.parseInt(a.substring(j, j + 1));
-            }
+        public Node(int x, int y) {
+            this.x = x;
+            this.y = y;
         }
+    }
 
-        DFS(arr, 0, 0);
-//        for(int i = 0 ; i < n ; i++){
-//            for(int j = 0 ; j < m ; j++)
-//                System.out.print(arr[i][j] + " ");
-//            System.out.println("");
-//        }
-        System.out.println(arr[n-1][m-1]);
+    public static void main(String[] args) throws IOException {
+       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+       String input[] = br.readLine().split(" ");
+
+       int n = Integer.parseInt(input[0]);
+       int m = Integer.parseInt(input[1]);
+
+       int map[][] = new int[n][m];
+
+       for (int i = 0 ; i < n ; i++) {
+           StringTokenizer st = new StringTokenizer(br.readLine());
+           String s = st.nextToken();
+
+           for (int j = 0 ; j < m ; j++) {
+               map[i][j] = s.charAt(j) - '0';
+           }
+       }
+
+       boolean visited[][] = new boolean[n][m];
+
+       Node inputValue = new Node(n, m);
+
+       DFS(map,  visited, inputValue);
+
+//       for (int i = 0 ; i < n ; i++) {
+//           for (int j = 0 ; j < m ; j++)
+//               System.out.print(map[i][j]);
+//           System.out.println();
+//       }
+
+       System.out.println(map[n - 1][m - 1]);
 
     }
 }
