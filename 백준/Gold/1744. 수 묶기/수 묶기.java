@@ -1,58 +1,64 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import org.w3c.dom.Node;
+
+import java.io.*;
+import java.lang.reflect.Array;
+import java.nio.Buffer;
 import java.util.*;
+
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        Scanner input = new Scanner(System.in);
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int n = input.nextInt();
+        int n = Integer.parseInt(br.readLine());
+        int zero = 0;
+        // 음수 음수  , 0 음수 , 양수 양수
 
-        PriorityQueue<Integer> minusQueue = new PriorityQueue<>();
-        PriorityQueue<Integer> plusQueue = new PriorityQueue<>(Collections.reverseOrder());
-        int zeroCnt = 0;
-        for(int i = 0 ; i < n ; i++) {
-            int m = input.nextInt();
-            if(m > 0)
-                plusQueue.add(m);
-            else if (m < 0)
-                minusQueue.add(m);
+        PriorityQueue<Integer> posNum = new PriorityQueue<>(Collections.reverseOrder());
+        PriorityQueue<Integer> negNum = new PriorityQueue<>();
+
+        for (int i = 0 ; i < n ; i++) {
+
+            int num = Integer.parseInt(br.readLine());
+
+            if (num > 0)
+                posNum.add(num);
+            else if (num < 0)
+                negNum.add(num);
             else
-                zeroCnt++;
+                zero++;
         }
+
         int sum = 0;
 
-        while(minusQueue.size() != 1 && !minusQueue.isEmpty()) {
-            int a = minusQueue.poll();
-            int b = minusQueue.poll();
-            sum += a * b;
-        }
-        while(plusQueue.size() != 1 && !plusQueue.isEmpty()) {
-            int a = plusQueue.poll();
-            int b = plusQueue.poll();
+        while (posNum.size() >= 2) {
+            int a = posNum.poll();
+            int b = posNum.poll();
 
             if (a == 1 || b == 1)
-                sum += a + b;
+                sum += (a + b);
             else
                 sum += a * b;
         }
 
-        int plusValue = 0;
-        int minusValue = 0;
-        if(!minusQueue.isEmpty())
-            minusValue = minusQueue.poll();
-        if(!plusQueue.isEmpty())
-            plusValue = plusQueue.poll();
+        while (negNum.size() >= 2) {
+            int a = negNum.poll();
+            int b = negNum.poll();
+            sum += a * b;
+        }
 
-        if (zeroCnt != 0) {
-            sum += plusValue;
+        if (!negNum.isEmpty()) {
+            if (zero == 0) {
+                sum += negNum.poll();
+            }
         }
-        else {
-            sum += minusValue + plusValue;
+
+        if (!posNum.isEmpty()) {
+            sum += posNum.poll();
         }
+
         System.out.println(sum);
 
     }
