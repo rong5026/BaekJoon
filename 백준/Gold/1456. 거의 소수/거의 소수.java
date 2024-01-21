@@ -14,16 +14,17 @@ public class Main {
 
         boolean arr[] = new boolean[10000001];
 
-        for(int i = 2 ; i <= 10000000; i++) {
+        for (int i = 2 ; i <= 10000000; i++) {
+            
             if(arr[i])
                 continue;
 
-            for(int j = i + i ; j <= 10000000 ; j+=i) {
+            for (int j = i + i ; j <= 10000000 ; j+=i) {
                 arr[j] = true;
             }
         }
         long count =  0;
-        for(int i = 2 ; i <= 10000000 ; i++) {
+        for (int i = 2 ; i <= 10000000 ; i++) {
 
             if (arr[i])
                 continue;
