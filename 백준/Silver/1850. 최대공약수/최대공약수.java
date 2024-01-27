@@ -1,34 +1,37 @@
+import org.w3c.dom.Node;
+
 import java.io.*;
+import java.lang.reflect.Array;
+import java.nio.Buffer;
 import java.util.*;
+
 
 public class Main {
 
-    public static long gcd(long a, long b) {
+
+    private static long GCD(long a, long b) {
 
         if (b == 0)
             return a;
-
-        return gcd(b , a % b);
+        return (GCD(b, a % b));
     }
-
     public static void main(String[] args) throws IOException {
 
-        Scanner input = new Scanner(System.in);
-        long a = input.nextLong();
-        long b = input.nextLong();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        long c = gcd(a, b);
+        String input[] = br.readLine().split(" ");
+
+        long n = Long.parseLong(input[0]);
+        long m =  Long.parseLong(input[1]);
+        long count = GCD(n,m);
 
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
-        while(c > 0) {
+        while (count > 0) {
             bw.write("1");
-            c--;
+            count--;
         }
         bw.flush();
         bw.close();
-
-
 
 
     }
