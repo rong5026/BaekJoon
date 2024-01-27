@@ -25,14 +25,13 @@ public class Main {
         long m =  Long.parseLong(input[1]);
         long count = GCD(n,m);
 
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
+
         while (count > 0) {
-            bw.write("1");
+            sb.append("1");
             count--;
         }
-        bw.flush();
-        bw.close();
-
+        System.out.println(sb);
 
     }
 }
