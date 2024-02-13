@@ -1,60 +1,75 @@
-import java.util.*;
-
-/*
-[백준] 1707번 - 이분 그래프 (Java)
-*/
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class Main {
-    static int K, V, E;
-    static ArrayList<Integer> list[];
-    static int visited[];
-    static String result = "";
+    public static ArrayList<Integer>[] list;
+    public static boolean[] visitied;
+    public static int[] check;
+    public static boolean flag;
 
-    static boolean DFS(int node, int color) {
-        visited[node] = color;
-
-        for (int v : list[node]) {
-            //System.out.println("list["+node+"] -> "+v+", color= "+color);
-            if (visited[v] == 0) {
-                DFS(v, color*-1);
-            } else if (visited[v] == visited[node]) {
-                result = "NO";
-                return false;
+    public static void DFS(int start){
+        visitied[start] = true;
+        for(int item : list[start]){
+            if(!visitied[item]){
+                check[item] = (check[start]+1)%2;
+                DFS(item);
             }
-            if (result.equals("NO")) {
-                return false;
+            else if(check[item] == check[start]){
+                flag = false;
             }
         }
-        result = "YES";
-        return true;
     }
 
-	public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        K = in.nextInt();
-        for (int i=0; i<K; i++) {
-            result = "";// 결과값 초기화
-            V = in.nextInt();
-            E = in.nextInt();
-            list = new ArrayList[V+1];
-            for (int j=1; j<=V; j++) {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int testCase = Integer.parseInt(br.readLine());
+        String[] answer = new String[testCase];
+
+        for (int i = 0; i < testCase; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int n = Integer.parseInt(st.nextToken());
+            int e = Integer.parseInt(st.nextToken());
+
+            list = new ArrayList[n+1];
+            for (int j = 0; j < n+1; j++) {
                 list[j] = new ArrayList<>();
             }
-            visited = new int[V+1];
-            for (int k=1; k<=E; k++) {
-                int s = in.nextInt();
-                int e = in.nextInt();
-                list[s].add(e);
-                list[e].add(s);
+
+            for (int j = 0; j < e; j++) {
+                st = new StringTokenizer(br.readLine());
+                int a = Integer.parseInt(st.nextToken());
+                int b = Integer.parseInt(st.nextToken());
+
+                list[a].add(b);
+                list[b].add(a);
             }
-            boolean ans = true;
-            for (int t=1; t<=V; t++) {
-                if (visited[t] == 0) {
-                    ans = DFS(t, 1);
+
+            visitied = new boolean[n+1];
+            check = new int[n+1];
+            flag = true;
+
+            for (int j = 1; j < n+1 ; j++) {
+                if(flag){
+                    DFS(j);
                 }
-                if (ans == false) break;//그래프가 여러개일 때 하나라도 이분그래프가 아니면 중지
+                else{
+                    break;
+                }
             }
-            System.out.println(result);
+            if(flag){
+                answer[i] = "YES";
+            }
+            else{
+                answer[i] = "NO";
+            }
         }
-	}
+
+        for(String item : answer){
+            System.out.println(item);
+        }
+
+    }
 }
