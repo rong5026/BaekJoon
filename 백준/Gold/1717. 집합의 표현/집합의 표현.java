@@ -18,7 +18,6 @@ public class Main {
             return subArray[index];
 
         return subArray[index] = findRepresentationIdx(subArray[index]);
-        // return findRepresentationIdx(subArray[index]);
     }
 
     private static void find(int nodeA, int nodeB) {
@@ -54,13 +53,6 @@ public class Main {
             array[i] = i;
             subArray[i] = i;
         }
-    }
-
-    private static void printArray(int n) {
-        for (int i = 0 ; i <= n ; i++) {
-            System.out.print(subArray[i] + " ");
-        }
-        System.out.println();
     }
 
     public static void main(String[] args) throws IOException {
