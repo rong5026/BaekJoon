@@ -74,10 +74,6 @@ public class Main {
 			}
 		}
 
-        // for (int i = 1 ; i <=n ; i++){
-        //     System.out.print(parent[i] + " ");
-        // }
-
         int count = m;
 
         for (int i = 0 ; i < m ; i++) {
