@@ -25,7 +25,6 @@ public class Main {
 
 	private static void bfs(ArrayList<Integer> list[], int endCity) {
 
-
 		Queue<Integer> queue = new LinkedList<>();
 
 		queue.add(endCity);
@@ -35,9 +34,9 @@ public class Main {
 			int next = queue.poll();
 			visited[next] = true;
 
-			for (int a : list[next]) {
-				if (!visited[a]) {
-					queue.add(a);
+			for (int elem : list[next]) {
+				if (!visited[elem]) {
+					queue.add(elem);
 				}
 			}
 		}
@@ -58,7 +57,7 @@ public class Main {
 		edges = new Edge[m];
 		price = new long[n];
 		visited = new boolean[n];
-		ArrayList<Integer> checkList = new ArrayList<>();
+		ArrayList<Integer> checkRecycleList = new ArrayList<>();
 		ArrayList<Integer> list[] = new ArrayList[n];
 
 		Arrays.fill(distance, Integer.MIN_VALUE);
@@ -108,19 +107,18 @@ public class Main {
 			Edge edge = edges[j];
 			if (distance[edge.start] != Integer.MIN_VALUE
 				&& distance[edge.last] < edge.value + distance[edge.start]) {
-				checkList.add(edge.last);
+				checkRecycleList.add(edge.last);
 			}
 		}
-
 
 		if (distance[lastCity] == Integer.MIN_VALUE) {
 			System.out.println("gg");
 			return;
 		}
 
-		if (!checkList.isEmpty()) {
-			for (int i = 0 ; i < checkList.size() ; i++) {
-				bfs(list, checkList.get(i));
+		if (!checkRecycleList.isEmpty()) {
+			for (int i = 0 ; i < checkRecycleList.size() ; i++) {
+				bfs(list, checkRecycleList.get(i));
 				if (visited[lastCity]) {
 					System.out.println("Gee");
 					return;
@@ -128,8 +126,6 @@ public class Main {
 			}
 		}
 		System.out.println(distance[lastCity]);
-
-
 	}
 }
 
