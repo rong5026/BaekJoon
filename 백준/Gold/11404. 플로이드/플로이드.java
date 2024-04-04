@@ -12,7 +12,7 @@ public class Main {
 	static int m;
 	static int distance[][];
 
-	static int MAX_VALUE = 100000000;
+	static int MAX_VALUE = 100_000_01;
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
