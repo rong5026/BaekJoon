@@ -1,36 +1,37 @@
-import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.Buffer;
-import java.sql.Array;
-import java.util.*;
+import com.sun.source.tree.Tree;
 
-
+import java.io.*;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class Main {
+	public static void main(String[] args) throws IOException {
 
-    public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
 
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
+		long arr[] = new long[n + 1];
 
-        StringTokenizer input = new StringTokenizer(br.readLine());
+		st = new StringTokenizer(br.readLine());
 
-        long [] arr = new long[n + 1];
+		for (int i = 1 ; i <= n ; i++) {
+			arr[i] = arr[i - 1] + Long.parseLong(st.nextToken());
+		}
 
-        for(int i = 1 ; i <= n ; i++) {
-            arr[i] = arr[i - 1] + Long.parseLong(input.nextToken());
-        }
+		for (int i = 0 ; i < m ; i++) {
+			String input[] = br.readLine().split(" ");
 
-        for(int i = 0 ; i < m ; i++) {
-            input = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(input.nextToken());
-            int b = Integer.parseInt(input.nextToken());
-            System.out.println(arr[b] - arr[a - 1]);
-        }
-    }
+			int first = Integer.parseInt(input[0]);
+			int second = Integer.parseInt(input[1]);
+			Long result = arr[second] - arr[first - 1];
+			bw.write(result + "\n");
+		}
+
+		bw.flush();
+		bw.close();
+	}
 }
