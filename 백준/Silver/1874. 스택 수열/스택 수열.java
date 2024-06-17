@@ -1,51 +1,49 @@
-import javax.print.DocFlavor;
+
 import java.io.*;
 import java.util.Arrays;
-import java.util.Scanner;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
+
 public class Main {
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static void main(String[] args) throws IOException {
 
-        int n = Integer.parseInt(br.readLine());
-        int array[] = new int[n];
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		int n = Integer.parseInt(br.readLine());
+		int input[] = new int[n];
+		int cnt = 1;
+		boolean flag = true;
 
-        for (int i = 0 ; i < n ; i++) {
-            array[i] = Integer.parseInt(br.readLine());
-        }
+		for (int i = 0 ; i < n ; i++){
+			input[i] = Integer.parseInt(br.readLine());
+		}
 
-        Stack<Integer> stack = new Stack<Integer>();
+		Stack<Integer> stack = new Stack<Integer>();
 
-        StringBuilder sb = new StringBuilder();
+		for (int i = 0 ; i < n ; i++) {
 
-        int cnt = 1;
-        boolean result = true;
+			while (input[i] >= cnt) {
+				stack.add(cnt);
+				sb.append("+\n");
+				cnt++;
+			}
 
-        for (int i = 0 ; i < n ; i++) {
+			int elem = stack.pop();
+			if (elem != input[i]) {
+				flag = false;
+				System.out.println("NO");
+				break;
+			}
+			sb.append("-\n");
+		}
 
-            while (array[i] >= cnt) {
-                stack.push(cnt);
-                cnt++;
-                sb.append("+\n");
-            }
+		if (flag) {
+			System.out.println(sb.toString());
+		}
 
-            int elem = stack.pop();
-
-            if (elem == array[i]) {
-                sb.append("-\n");
-            }
-            else {
-                System.out.println("NO");
-                result = false;
-                break;
-            }
-        }
-
-        if (result)
-            System.out.println(sb.toString());
-
-    }
+	}
 }
