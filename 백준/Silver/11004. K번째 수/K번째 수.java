@@ -1,31 +1,32 @@
-import javax.swing.*;
 import java.io.*;
-import java.nio.Buffer;
-import java.sql.Array;
-import java.util.*;
-
-
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Stack;
+import java.util.StringTokenizer;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
 
-        String [] str = br.readLine().split(" ");
+		List<Long> list = new ArrayList<>();
 
-        int n = Integer.parseInt(str[0]);
-        int m = Integer.parseInt(str[1]);
+		st = new StringTokenizer(br.readLine());
+		for (int i = 0 ; i < n ; i++) {
+			list.add(Long.parseLong(st.nextToken()));
+		}
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
+		Collections.sort(list);
 
-        int []arr = new int[n];
+		System.out.println(list.get(m - 1));
 
-        for(int i = 0 ; i < n ; i++)
-            arr[i] = Integer.parseInt(st.nextToken());
-
-        Arrays.sort(arr);
-
-        System.out.println(arr[m - 1]);
-    }
+	}
 }
