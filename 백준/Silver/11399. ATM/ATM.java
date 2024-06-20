@@ -1,39 +1,32 @@
 import java.io.*;
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
-
 public class Main {
-    public static void main(String[] args) throws IOException {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int n = Integer.parseInt(br.readLine());
+		int input[] = new int[n];
+		int sumArray[] = new int[n];
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int n = Integer.parseInt(br.readLine());
+		for (int i = 0 ; i < n ; i++) {
+			input[i] = Integer.parseInt(st.nextToken());
+		}
 
-        int arr[] = new int[n];
-        StringTokenizer st = new StringTokenizer(br.readLine());
+		Arrays.sort(input);
 
-        for (int i = 0 ; i < n ; i++) {
-            arr[i] = Integer.parseInt(st.nextToken());
-        }
+		int m = n;
+		int sum = 0;
+		for (int i = 0 ; i < n ; i++) {
+			sum += m * input[i];
+			m--;
+		}
 
-        Arrays.sort(arr);
+		System.out.println(sum);
 
-        int sumArr[] = new int[n];
-
-        sumArr[0] = arr[0];
-        for (int i = 1; i < n ; i++) {
-            sumArr[i] = arr[i] + sumArr[i - 1];
-        }
-
-        int resultSum = 0;
-
-        for (int i = 0 ; i < n ; i++) {
-            resultSum += sumArr[i];
-        }
-
-        System.out.println(resultSum);
-
-    }
+	}
 }
