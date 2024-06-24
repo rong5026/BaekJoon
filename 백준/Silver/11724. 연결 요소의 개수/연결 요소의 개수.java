@@ -1,55 +1,59 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
+
+import java.io.*;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class Main {
 
-    public static void DFS(int index, ArrayList<Integer>[] list, int []visit) {
+	private static void DFS(ArrayList<Integer> list[], int index, boolean visited[]) {
+		if (visited[index])
+			return ;
 
-        if(visit[index] != 0)
-            return ;
+		visited[index] = true;
 
-        visit[index] = 1;
+		for (int i : list[index]) {
+			if (!visited[i])
+				DFS(list, i, visited);
+		}
+	}
 
-        for(int i : list[index]) {
-            if(visit[i] == 0)
-                DFS(i, list, visit);
-        }
-    }
-    public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
 
-        String []str = br.readLine().split(" ");
+		ArrayList<Integer> list[] = new ArrayList[n + 1];
 
-        int n = Integer.parseInt(str[0]);
-        int m = Integer.parseInt(str[1]);
+		for (int i = 1; i <= n ; i++) {
+			list[i] = new ArrayList<>();
+		}
 
-        ArrayList<Integer>[] list = new ArrayList[n + 1];
+		for(int i = 0 ; i < m ; i++) {
+			st = new StringTokenizer(br.readLine());
 
-        for(int i = 1 ; i <= n ; i++)
-            list[i] = new ArrayList<Integer>();
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
 
-        for(int i = 0; i <m ; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
+			list[a].add(b);
+			list[b].add(a);
+		}
 
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
+		boolean visit[] = new boolean[n + 1];
+		int count = 0;
 
-            list[a].add(b);
-            list[b].add(a);
-        }
+		for (int i = 1 ; i <=n ; i++) {
+			if (!visit[i]) {
+				count++;
+				DFS(list, i, visit);
+			}
+		}
+		System.out.println(count);
 
-        int []visit = new int[n + 1];
-        int count = 0;
-        for(int i = 1 ; i <= n ; i++) {
 
-            if(visit[i] == 0) {
-                count++;
-                DFS(i, list, visit);
-            }
-        }
-        System.out.println(count);
-    }
+	}
+
 }
