@@ -1,83 +1,101 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.*;
+
 
 public class Main {
 
+	private static int checkSeperatedCount(int input[], int valid) {
 
-    static int n,m, result;
+		int sum = 0;
+		int count = 0;
 
-    public static int getCorrectNum(int arr[], int mid) {
+		for (int i = 0 ; i < input.length ; i++) {
+			if (sum + input[i] < valid) {
+				sum += input[i];
+			}
+			else {
+				if (i != input.length - 1) {
+					sum = 0;
+					count++;
+					i--;
+				}
+			}
+		}
+		return count;
+	}
+	public static int findBlueLay(int arr[], int value) {
 
-        int count = 0;
-        int sum = 0;
-        for(int i = 0 ; i < n ; i++) {
 
-            if( sum + arr[i] <= mid) {
-                sum += arr[i];
-                if( i == n - 1)
-                    count++;
-            }
-            else {
-                count++;
-                sum = 0;
-                i--;
-            }
-        }
-        return count;
-    }
-    public static void BinarySearch(int arr[], int start, int last) {
+		int count = 0;
+		int sum = 0;
+		for(int i = 0 ; i < arr.length ; i++) {
 
-        int mid = 0;
-        int cnt = 0;
-        while(start <= last) {
-            mid = (start + last) / 2;
+			if( sum + arr[i] <= value) {
+				sum += arr[i];
+				if( i == arr.length - 1)
+					count++;
+			}
+			else {
+				count++;
+				sum = 0;
+				i--;
+			}
+		}
+		return count;
+	}
+	private static int binarySearch(int input[], int sum, int max, int m) {
 
-            int needValue = getCorrectNum(arr, mid);
-//            System.out.println(mid + " " + needValue);
-//            cnt++;
-//            if (cnt == 5)
-//                break;
-            if (start == last && last == mid && result == 0)
-                result = mid;
-            if (needValue == m){
-                result = mid;
-                last = mid - 1;
-            }
-            else if( needValue < m) {
-                last = mid - 1;
-            }
-            else {
-                start = mid + 1;
-            }
-        }
-    }
+		int start = max;
+		int last = sum;
+		int result = 0;
 
-    public static void main(String[] args) throws IOException {
+		while (start <= last) {
+			int mid = (start + last) /2;
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			int seperatedCount = findBlueLay(input, mid);
+			if (start == last && last == mid && result == 0)
+				result = mid;
 
-        String str[] = br.readLine().split(" ");
+			if (seperatedCount > m) {
+				start = mid + 1;
+			}
+			else if (seperatedCount < m) {
+				last = mid - 1;
+			}
+			else {
+				result = mid;
+				last = mid - 1;
+			}
+		}
+		return result;
+	}
 
-        n = Integer.parseInt(str[0]);
-        m = Integer.parseInt(str[1]);
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
+		int input[] = new int[n];
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
+		int max = 0;
+		int sum = 0;
+		st = new StringTokenizer(br.readLine());
 
-        int arr[] = new int[n];
-        int max = 0;
-        int sum = 0;
-        result = 0;
+		for (int i = 0 ; i < n ; i++) {
+			input[i] = Integer.parseInt(st.nextToken());
 
-        for(int i = 0 ; i < n ; i++) {
-            arr[i]= Integer.parseInt(st.nextToken());
-            if (arr[i] > max)
-                max = arr[i];
-            sum += arr[i];
-        }
-        BinarySearch(arr, max, sum);
-        System.out.println(result);
+			if (input[i] > max) {
+				max = input[i];
+			}
+			sum += input[i];
+		}
 
-    }
+		System.out.println(binarySearch(input, sum, max, m));
+
+
+	}
 }
