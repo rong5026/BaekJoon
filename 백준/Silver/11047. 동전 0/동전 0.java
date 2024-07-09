@@ -1,58 +1,42 @@
-import org.w3c.dom.Node;
-
-import java.io.*;
-import java.lang.reflect.Array;
-import java.nio.Buffer;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.lang.management.MemoryType;
 import java.util.*;
 
 
 public class Main {
+	public static void main(String[] args) throws IOException {
 
-    public static int getMaxIndex(int arr[], int num) {
-        int start = 0;
-        int last = arr.length - 1;
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int result = 0;
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-        while (start <= last) {
-            int mid = (start + last) / 2;
-            if (arr[mid]  > num) {
-                last = mid - 1;
-            }
-            else {
-                start = mid + 1;
-                result = mid;
-            }
-        }
-        return result;
-    }
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
+		int input[] = new int[n + 1];
+		int index = n;
+		int resultCnt = 0;
 
-    public static void main(String[] args) throws IOException {
+		for (int i = 1 ; i <= n ; i++) {
+			input[i] = Integer.parseInt(br.readLine());
+			if (input[i - 1] <= m && m < input[i]) {
+				index = i - 1;
+			}
+		}
 
-        Scanner input = new Scanner(System.in);
+		for (int j = index ; j >= 1 ; j--) {
 
-        int n = input.nextInt();
-        int m = input.nextInt();
+			while (input[j] <= m) {
+				resultCnt +=  m / input[j];
+				m = m % input[j];
+			}
+		}
 
-        int arr[] = new int[n];
+		System.out.println(resultCnt);
 
-        for (int i = 0 ; i < n ; i++) {
-            arr[i] = input.nextInt();
-        }
 
-        int index = getMaxIndex(arr, m);
-        int sum = 0;
-        int count = 0;
-
-        for (int i = index ; i >= 0 ; i--) {
-
-            while (sum + arr[i] <= m) {
-                sum += arr[i];
-                count++;
-            }
-        }
-
-        System.out.println(count);
-
-    }
+	}
 }
