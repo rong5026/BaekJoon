@@ -1,53 +1,40 @@
-import org.w3c.dom.Node;
-
-import java.io.*;
-import java.lang.reflect.Array;
-import java.nio.Buffer;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.lang.management.MemoryType;
 import java.util.*;
 
 
 public class Main {
+	public static void main(String[] args) throws IOException {
 
-    public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String input[] = br.readLine().split("-");
+		int result = 0;
 
-        String input[] = br.readLine().split("-");
+		for (int i = 0 ; i < input.length ; i++) {
 
-        int total = 0;
-        for (int i = 0 ; i < input.length ; i++) {
+			String input2[] = input[i].split("\\+");
 
-            int sum = 0;
+			int sum = 0;
+			for (int j = 0 ; j < input2.length ; j++) {
+				sum += Integer.parseInt(input2[j]);
+			}
 
-            String arr[] = input[i].split("\\+");
+			if (i == 0) {
+				result += sum;
+			}
+			else {
+				result -= sum;
+			}
+		}
+		System.out.println(result);
 
-            for (int j = 0 ; j < arr.length ; j++) {
-                sum += Integer.parseInt(arr[j]);
-            }
 
-            if (i == 0)
-                total  = sum;
-            else
-                total -= sum;
-        }
 
-        System.out.println(total);
-    }
+
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
