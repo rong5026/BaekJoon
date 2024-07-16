@@ -1,44 +1,40 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+	private static boolean isPrime(int num) {
+		if (num == 1)
+			return false;
+		for (int i = 2 ; i <= Math.sqrt(num) ; i++) {
+			if (num % i == 0)
+				return false;
+		}
+		return true;
+	}
+	private static boolean checkPerim(int num) {
+		char array[] = String.valueOf(num).toCharArray();
 
-        Scanner input = new Scanner(System.in);
+		for (int i = 0 ; i < array.length / 2 ; i++) {
+			if (array[i] != array[array.length -1 -i])
+				return false;
+		}
+		return true;
+	}
+	public static void main(String[] args) throws IOException {
+		Scanner input = new Scanner(System.in);
 
-        int n = input.nextInt();
+		int n = input.nextInt();
 
-        while(true) {
+		while(true) {
+			if (checkPerim(n) && isPrime(n))
+				break;
+			else
+				n++;
+		}
+		System.out.println(n);
 
-            if(isPalindrome(n) && isPrime(n)) {
-                System.out.println(n);
-                break;
-            }
-            n++;
-        }
-
-
-
-    }
-
-    public static boolean isPalindrome(int n) {
-        String str = Integer.toString(n);
-        char arr[] = str.toCharArray();
-
-        for(int i  = 0 ; i < arr.length / 2 ; i++) {
-            if(arr[i] != arr[arr.length -i -1])
-                return false;
-        }
-        return true;
-    }
-    public static boolean isPrime(int n) {
-        if(n==1)
-            return false;
-        for(int i = 2 ; i <= Math.sqrt(n) ; i++) {
-            if(n % i == 0)
-                return false;
-        }
-        return true;
-    }
+	}
 }
