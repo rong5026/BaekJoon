@@ -1,107 +1,64 @@
-import com.sun.source.tree.Tree;
-
-import org.w3c.dom.Node;
-
-import java.io.*;
-import java.nio.Buffer;
-import java.nio.file.LinkPermission;
-import java.sql.Array;
-import java.util.*;
-
-import jdk.jshell.SourceCodeAnalysis;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
-
-	static 	int timeValue[];
-	static ArrayList<Integer> list[];
-	static int result[];
-
-	static int indegree[];
-	// public static void bfs(int i) {
-	//
-	// 	visited[i] = true;
-	//
-	//
-	// 	Queue<Integer> queue = new LinkedList<>();
-	// 	queue.add(i);
-	//
-	// 	while (!queue.isEmpty()) {
-	//
-	// 		totalSum += timeValue[i];
-	// 		int now = queue.poll();
-	//
-	// 		for (int elem : list[now]) {
-	// 			if (!visited[elem])
-	// 				bfs(elem);
-	// 		}
-	// 	}
-	// }
 	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		Scanner input = new Scanner(System.in);
+		int n = Integer.parseInt(br.readLine());
+		ArrayList<Integer> list[] = new ArrayList[n + 1];
+		int time[] = new int[n + 1];
+		int value[] = new int[n + 1];
+		int result[] = new int[n + 1];
 
-		int n = input.nextInt();
-
-		list = new ArrayList[n + 1];
-		timeValue = new int[n + 1];
-		indegree = new int[n + 1];
-		result = new int[n + 1];
-
-		for (int i = 1 ; i <= n ; i++) {
+		for (int i = 1; i <= n ; i++) {
 			list[i] = new ArrayList<>();
 		}
 
 		for (int i = 1 ; i <= n ; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
 
-			timeValue[i] = input.nextInt();
+			time[i] = Integer.parseInt(st.nextToken());
+			int tower = 0;
 			while (true) {
-				int num = input.nextInt();
-
-				if (num == -1)
+				tower = Integer.parseInt(st.nextToken());
+				if (tower == -1) {
 					break;
-				list[num].add(i);
-				indegree[i]++;
+				}
+				list[tower].add(i);
+				value[i]++;
 			}
 		}
 
 		Queue<Integer> queue = new LinkedList<>();
 
-		for (int i = 1 ; i <= n ; i++) {
-			if (indegree[i] == 0) {
+		for (int i = 1 ; i <= n ; i++){
+			if (value[i] == 0) {
 				queue.add(i);
 			}
 		}
 
 
-
 		while (!queue.isEmpty()) {
-			int now = queue.poll();
+			int elem = queue.poll();
 
-			for (int elem : list[now]) {
-				indegree[elem]--;
-
-				result[elem] = Math.max(result[elem], result[now] + timeValue[now]);
-				if (indegree[elem] == 0)
-					queue.add(elem);
+			for (int next : list[elem]) {
+				value[next]--;
+				result[next] =  Math.max(result[next], result[elem] + time[elem]);
+				if (value[next] == 0)
+					queue.add(next);
 			}
 		}
 
-		for (int i = 1; i <= n ; i++) {
-			System.out.println(result[i] + timeValue[i]);
+		for (int i = 1 ; i<= n ; i++){
+			result[i] += time[i];
+			System.out.println(result[i]);
 		}
-
-
-		// for (int i = 1 ; i <= n ; i++) {
-		// 	System.out.print(timeValue[i] + " ");
-		// }
-		//
-		// for (int i = 1 ; i <= n ; i++) {
-		//
-		// 	for (int j = 0 ; j < list[i].size() ; j++) {
-		// 		System.out.print(list[i].get(j) + " ");
-		// 	}
-		// 	System.out.println();
-		// }
-
 	}
 }
