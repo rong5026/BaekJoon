@@ -1,82 +1,76 @@
-import com.sun.source.tree.Tree;
 
-import org.w3c.dom.Node;
-
-import java.io.*;
-import java.nio.Buffer;
-import java.nio.file.LinkPermission;
-import java.sql.Array;
-import java.util.*;
-
-import jdk.jshell.SourceCodeAnalysis;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
 
 class hNode {
-	int weight;
-	int lastCity;
+	int node, value;
 
-	hNode(int lastCity, int weight) {
-		this.weight = weight;
-		this.lastCity = lastCity;
+	public hNode(int node, int value) {
+		this.node = node;
+		this.value = value;
 	}
 }
-
 public class Main {
-
-	static ArrayList<hNode> list[];
-	static Long balance[];
-	static boolean visited[];
-
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		int n = Integer.parseInt(br.readLine());
 		int m = Integer.parseInt(br.readLine());
-		list = new ArrayList[n + 1];
-		balance = new Long[n + 1];
-		visited = new boolean[n + 1];
+		ArrayList<hNode> list[] = new ArrayList[n + 1];
+		StringTokenizer st;
 		for (int i = 1; i <= n ; i++) {
-			list[i] = new ArrayList<hNode>();
-			balance[i] = 999999999999L;
+			list[i] = new ArrayList<>();
 		}
 
-		for (int i = 0 ; i < m ; i++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < m ; i++) {
+			st = new StringTokenizer(br.readLine());
 
-			int startCity = Integer.parseInt(st.nextToken());
-			int lastCity = Integer.parseInt(st.nextToken());
-			int weight = Integer.parseInt(st.nextToken());
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			int value = Integer.parseInt(st.nextToken());
 
-			list[startCity].add(new hNode(lastCity, weight));
+			list[a].add(new hNode(b, value));
 		}
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		st = new StringTokenizer(br.readLine());
+
 		int start = Integer.parseInt(st.nextToken());
 		int last = Integer.parseInt(st.nextToken());
-		balance[start] = 0L;
 
-		PriorityQueue<hNode> queue = new PriorityQueue<>(Comparator.comparingLong(hNode -> hNode.weight));
+		int price[] = new int[n + 1];
+
+		for (int i = 1; i <= n ; i++) {
+			if (start == i)
+				price[i] = 0;
+			else
+				price[i] = Integer.MAX_VALUE;
+		}
+
+		PriorityQueue<hNode> queue = new PriorityQueue<>(Comparator.comparingInt(hNode->hNode.value));
+		boolean visited[] = new boolean[n + 1];
 
 		queue.add(new hNode(start, 0));
 
 		while (!queue.isEmpty()) {
-
 			hNode now = queue.poll();
+			if (!visited[now.node]){
+				visited[now.node] = true;
 
-			if (visited[now.lastCity])
-				continue;
-
-			visited[now.lastCity] = true;
-
-			for (hNode next : list[now.lastCity]) {
-
-				if (balance[next.lastCity] > now.weight + next.weight) {
-					balance[next.lastCity] = (long)(now.weight + next.weight);
-					queue.add(new hNode(next.lastCity, now.weight + next.weight));
-
+				for (hNode next : list[now.node]) {
+					if (!visited[next.node] && price[next.node] > price[now.node] + next.value) {
+						price[next.node] = price[now.node] + next.value;
+						queue.add(new hNode(next.node, price[next.node]));
+					}
 				}
 			}
-		}
 
-		System.out.println(balance[last]);
+		}
+		System.out.println(price[last]);
 	}
 }
