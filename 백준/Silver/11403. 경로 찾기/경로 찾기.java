@@ -1,53 +1,46 @@
 import com.sun.source.tree.Tree;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.nio.Buffer;
+import java.util.*;
 
 public class Main {
 
-	static int distance[][];
-	static int n;
-
-
 	public static void main(String[] args) throws IOException {
-
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-		n = Integer.parseInt(br.readLine());
-
-		distance = new int[n + 1][n + 1];
+		int n = Integer.parseInt(br.readLine());
+		int map[][] = new int[n + 1][n + 1];
 
 		for (int i = 1 ; i <= n ; i++) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
-			for (int j = 1; j <= n; j++) {
-				distance[i][j] = Integer.parseInt(st.nextToken());
+			for (int j = 1 ; j <=n ; j++) {
+				map[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
 
-		for (int k = 1 ; k <= n ; k++) {
+		for (int k = 1 ; k <= n ; k ++) {
 			for (int i = 1 ; i <= n ; i++) {
-				for (int j = 1; j <= n ; j++) {
-					if (distance[i][k] == 1 && distance[k][j] == 1) {
-						distance[i][j] = 1;
+				for (int j = 1 ; j <= n ; j ++) {
+					if (map[i][k] == 1 && map[k][j] == 1) {
+						map[i][j] = 1;
 					}
 				}
 			}
 		}
 
+		StringBuilder sb = new StringBuilder();
+
 		for (int i = 1 ; i <= n ; i++) {
-			for (int j = 1; j <= n ; j++) {
-				bw.write(distance[i][j] + " ");
+			for (int j = 1 ; j <=n ; j++) {
+				sb.append(map[i][j] +" ");
 			}
-			bw.write("\n");
+			sb.append("\n");
 		}
 
-		bw.flush();
-		bw.close();
+		System.out.println(sb);
+
+
 	}
 }
+
