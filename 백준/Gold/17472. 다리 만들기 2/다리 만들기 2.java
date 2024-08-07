@@ -1,25 +1,18 @@
+
+
 import com.sun.source.tree.Tree;
 
-import java.awt.*;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 
-class Edge {
-	int start;
-	int last;
-	int value;
+class hNode {
+	int start, last, value;
 
-	public Edge(int start, int last, int value) {
+	public hNode(int start, int last, int value) {
 		this.start = start;
 		this.last = last;
 		this.value = value;
@@ -28,137 +21,79 @@ class Edge {
 
 public class Main {
 
-	private static final int[] dx = {-1, 1, 0, 0};
-	private static final int[] dy = {0, 0, -1, 1};
+	private static int dx[] = {1, 0, -1, 0};
+	private static int dy[] = {0, 1, 0, -1};
+	private static int map[][];
+	private static int n, m;
+	private static PriorityQueue<hNode> edges;
+	private static int parent[];
 
-	static int n,m;
-	static int board[][];
-	static PriorityQueue<Edge> edges;
-	static int islandCnt = 0;
-	static boolean visited[][];
-	static int parent[];
-
-
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
-
-		board = new int[n + 1][m + 1];
-		visited = new boolean[n + 1][m + 1];
-		edges = new PriorityQueue<>(Comparator.comparingInt((Edge e) -> e.value));
-
-
-		// 입력값
-		for (int i = 1 ; i <= n ; i++) {
-			st = new StringTokenizer(br.readLine());
-			for (int j = 1 ; j <=m ; j++) {
-				board[i][j] = Integer.parseInt(st.nextToken());
-			}
-		}
-
-		// 섬 번호로 구분
-		for (int i = 1 ; i <= n ; i++) {
-			for (int j = 1; j <= m ; j++) {
-				if (board[i][j] == 1 && !visited[i][j]) {
-					++islandCnt;
-					BFS(i, j);
-				}
-			}
-		}
-
-		// 가능한 다리 Edge 리스트에 추가
-		for (int i = 1 ; i <= n ; i++) {
-			for (int j = 1; j <= m; j++) {
-				if (board[i][j] != 0)
-					checkValidBridgeAndAddEdge(i , j, board[i][j]);
-			}
-		}
-
-		// 유니온 파인드 배열 초기화
-		parent = new int[islandCnt + 1];
-		for (int i = 1 ; i <= islandCnt ; i++) {
-			parent[i] = i;
-		}
-
-		int sum = 0;
-
-		while (!edges.isEmpty()) {
-			Edge edge = edges.poll();
-			if (find(edge.start) != find(edge.last)) {
-				union(edge.start, edge.last);
-				sum += edge.value;
-			}
-		}
-
-		int parentValue = find(parent[1]);
-		for (int i = 1; i <= islandCnt; i++) {
-			if (parentValue != find(parent[i])) {
-				System.out.println("-1");
-				return;
-			}
-		}
-		System.out.println(sum);
-	}
-	private static void BFS(int i, int j) {
+	private static void bfs(int y, int x, int islandNum) {
+		map[y][x] = islandNum;
 
 		Queue<int []> queue = new LinkedList<>();
 
-		queue.add(new int[]{i , j});
-		visited[i][j] = true;
-		board[i][j] = islandCnt; // 섬 번호 매기기
+		queue.add(new int[] {y, x});
 
 		while (!queue.isEmpty()) {
-			int now[] = queue.poll();
 
-			for (int index = 0 ; index < 4 ; index++) {
-				int mx = now[1] + dx[index];
-				int my = now[0] + dy[index];
+			int elem[] = queue.poll();
 
-				// 강 or 맵 밖 or 이미 방문
-				if ((mx < 1 || my < 1 || mx > m || my > n)
-					|| visited[my][mx]
-					|| board[my][mx] == 0)
-					continue;
+			for (int i = 0 ; i < 4 ; i++) {
+				int Y = elem[0] + dy[i];
+				int X = elem[1] + dx[i];
 
-				visited[my][mx] = true;
-				board[my][mx] = islandCnt;
-				queue.add(new int[]{my, mx});
+				if (0 <= Y && Y < n && 0 <= X && X < m) {
+					if (map[Y][X] == -1) {
+						queue.add(new int[]{Y, X});
+						map[Y][X] = islandNum;
+					}
+				}
 			}
 		}
 	}
 
-	private static void checkValidBridgeAndAddEdge(int y, int x, int startIsland) {
+	private static void addValidEdges(int index, int y, int x) {
+		int length = 0;
 
-		int lenCount;
+		Queue<int []> queue = new LinkedList<>();
 
-		for (int i = 0 ; i < 4 ; i++) {
+		queue.add(new int[]{y, x});
 
-			int mx = x + dx[i];
-			int my = y + dy[i];
-			lenCount = 0;
+		while(!queue.isEmpty()) {
+			int elem[] = queue.poll();
 
-			while (!(mx < 1 || my < 1 || mx > m || my > n)) {
+			int Y = elem[0] + dy[index];
+			int X = elem[1] + dx[index];
 
-				if (board[my][mx] == 0) {
-					lenCount++;
+			if (0 <= Y && Y < n && 0 <= X && X < m) {
+				if (map[Y][X] == 0){
+					queue.add(new int[]{Y, X});
+					length++;
 				}
 				else {
-					if (lenCount >= 2) {
-						edges.add(new Edge(startIsland, board[my][mx], lenCount));
-					}
-					break;
+					if (length >= 2)
+						edges.add(new hNode(map[y][x], map[Y][X], length));
 				}
-				mx += dx[i];
-				my += dy[i];
+			}
+		}
+	}
+	private static void checkValidEdges(int y, int x){
+
+		for (int i = 0 ; i < 4 ; i++) {
+			int Y = y + dy[i];
+			int X = x + dx[i];
+
+			if (0 <= Y && Y < n && 0 <= X && X < m) {
+				if (map[Y][X] == 0){
+					addValidEdges(i, y, x);
+				}
 			}
 		}
 	}
 
 	private static int find(int a) {
-		if (a == parent[a])
+		if (parent[a] == a)
 			return a;
 		return parent[a] = find(parent[a]);
 	}
@@ -167,12 +102,78 @@ public class Main {
 		a = find(a);
 		b = find(b);
 
-		if (a < b) {
-			parent[b] = a;
-		}
-		else {
+		if (a > b)
 			parent[a] = b;
-		}
+		else
+			parent[b] = a;
 	}
 
+	private static int getResult(int islandNum) {
+		int result = 0;
+
+		while (!edges.isEmpty()) {
+			hNode elem = edges.poll();
+			if (find(elem.start) != find(elem.last)) {
+				result += elem.value;
+				union(elem.start, elem.last);
+			}
+		}
+
+		for (int i = 2 ; i < islandNum ; i++) {
+			if (find(parent[1]) != find(parent[i]))
+				return -1;
+		}
+		return result;
+	}
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		n = Integer.parseInt(st.nextToken());
+		m = Integer.parseInt(st.nextToken());
+		map = new int[n][m];
+
+		// input
+		for (int i = 0 ; i < n ; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 0 ; j < m ; j++) {
+				if (Integer.parseInt(st.nextToken()) == 1) {
+					map[i][j] = -1;
+				}
+			}
+		}
+
+		// 섬마다 번호 매기기
+		int islandNum = 1;
+		for (int i = 0 ; i < n ; i++) {
+			for (int j = 0 ; j < m ; j++) {
+				if (map[i][j] == -1) {
+					bfs(i, j, islandNum);
+					islandNum++;
+				}
+			}
+		}
+
+		// 연결할 수 있는 다리의 Edge를 저장
+		edges = new PriorityQueue<>(Comparator.comparingInt(hNode -> hNode.value));
+		for (int i = 0 ; i < n ; i++) {
+			for (int j = 0 ; j < m ; j++) {
+				if (map[i][j] != 0)
+					checkValidEdges(i, j);
+			}
+		}
+
+		parent = new int[islandNum];
+
+		// union, find 배열 초기화
+		for (int i = 1 ; i < islandNum ; i++) {
+			parent[i] = i;
+		}
+
+		System.out.println(getResult(islandNum));
+
+
+	}
 }
+
