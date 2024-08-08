@@ -1,16 +1,15 @@
+
+
 import com.sun.source.tree.Tree;
 
 import java.io.*;
 import java.util.Comparator;
 import java.util.PriorityQueue;
-import java.util.StringTokenizer;
 
-class Edge {
-	int start;
-	int last;
-	int value;
+class hNode {
+	int start, last, value;
 
-	public Edge(int start, int last, int value) {
+	public hNode(int start, int last, int value) {
 		this.start = start;
 		this.last = last;
 		this.value = value;
@@ -19,60 +18,18 @@ class Edge {
 
 public class Main {
 
-	static PriorityQueue<Edge> edges;
 	private static int parent[];
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+	private static int convertCharToInt(char c) {
 
-		int n = Integer.parseInt(st.nextToken());
-		int totalSum = 0;
-		parent = new int[n + 1];
-		edges = new PriorityQueue<>(Comparator.comparingInt(hEdge->hEdge.value));
-
-		// union find 배열 초기화
-		for (int i = 1; i <= n ; i++) {
-			parent[i] = i;
-		}
-
-		// 입력값 초기화
-		for (int i = 1 ; i <= n ; i++) {
-			String input = br.readLine();
-			char[] inputArray = input.toCharArray();
-
-			for (int j = 1 ; j <= n ; j++) {
-				int value = changeCharToNum(inputArray[j - 1]);
-				totalSum += value;
-				if (i != j && value != 0)
-					edges.add(new Edge(i, j, value));
-			}
-		}
-
-		int minTotal = 0;
-		while (!edges.isEmpty()) {
-
-			Edge now = edges.poll();
-
-			if (find(now.start) != find(now.last)) {
-				union(now.start, now.last);
-				minTotal += now.value;
-			}
-		}
-
-		int parentIdx = find(1);
-		for (int i = 1 ; i <= n ; i++) {
-			if (parentIdx != find(parent[i])) {
-				System.out.println("-1");
-				return;
-			}
-		}
-
-		System.out.println(totalSum - minTotal);
+		if ('a' <= c && c <= 'z')
+			return c - 'a' + 1;
+		else
+			return c - 'A' + 27;
 	}
 
 	private static int find(int a) {
-		if (parent[a] == a)
+		if (a == parent[a])
 			return a;
 		return parent[a] = find(parent[a]);
 	}
@@ -81,33 +38,67 @@ public class Main {
 		a = find(a);
 		b = find(b);
 
-		if (a < b)
-			parent[b] = a;
-		else
+		if (a > b)
 			parent[a] = b;
-	}
-	private static int changeCharToNum(char c) {
-
-		if (c >= 'a' && c <='z')
-			return c - 'a' + 1;
-		else if (c >= 'A' && c <= 'Z')
-			return c - 38;
 		else
-			return 0;
+			parent[b] = a;
+	}
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		int n = Integer.parseInt(br.readLine());
+		int map[][] = new int[n + 1][n + 1];
+		int total = 0;
+
+		PriorityQueue<hNode> list = new PriorityQueue<>(Comparator.comparingInt(hNode -> hNode.value));
+		parent = new int[n + 1];
+
+		// input
+		for (int i = 1; i <= n; i++) {
+			char input[] = br.readLine().toCharArray();
+			for (int j = 0; j < n; j++) {
+				if (input[j] == '0')
+					map[i][j + 1] = 0;
+				else
+					map[i][j + 1] = convertCharToInt(input[j]);
+				total += map[i][j + 1];
+			}
+		}
+
+		for (int i = 1 ; i <= n ; i++) {
+			parent[i] = i;
+		}
+
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= n; j++) {
+				if (map[i][j] != 0) {
+					list.add(new hNode(i, j, map[i][j]));
+				}
+			}
+		}
+
+		while (!list.isEmpty()) {
+			hNode elem = list.poll();
+			if (find(elem.start) != find(elem.last)) {
+				total -= elem.value;
+				union(elem.start, elem.last);
+			}
+		}
+
+		boolean isValid = true;
+		for (int i = 2; i <= n ; i++) {
+			if (find(parent[1]) != find(parent[i])) {
+				isValid = false;
+				break;
+			}
+		}
+
+		if (!isValid)
+			System.out.println("-1");
+		else
+			System.out.println(total);
+
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
