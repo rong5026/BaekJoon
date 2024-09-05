@@ -2,16 +2,23 @@ import java.util.*;
 
 public class Solution {
     public int[] solution(int []arr) {
-        int[] answer = {};
         
-        Stack<Integer> stack = new Stack<>();
+        ArrayList<Integer> list = new ArrayList<>();
+        int prenum = -1;
         
-        for (int i : arr) {
-            if (stack.empty() || stack.peek() != i)
-                stack.push(i);
+        for (int elem : arr) {
+            if (prenum != elem) {
+                list.add(elem);
+            }
+            prenum = elem;
         }
-        System.out.println(answer);
-
-        return stack.stream().mapToInt(i -> i).toArray();
+        int [] answer = new int[list.size()];
+        
+        int j = 0;
+        for (int i : list) {
+            answer[j++] = i;
+        }
+        
+        return answer;
     }
 }
