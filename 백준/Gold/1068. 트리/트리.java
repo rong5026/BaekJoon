@@ -1,76 +1,90 @@
+
+
 import com.sun.source.tree.Tree;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
 
-	private static ArrayList<Integer> list[];
-	private static int deleteNode;
+	private static int result = 0;
 	private static boolean visited[];
+	private static void checkLeaf(ArrayList<Integer> list[], int num) {
+		visited[num] = true;
 
-	private static int root;
+		int childNode = 0;
+		for (int elem : list[num]) {
+			if (!visited[elem]) {
+				childNode++;
+				checkLeaf(list, elem);
+			}
+		}
+		if (childNode == 0)
+			result++;
+	}
 
-	private static int leafNode;
+	private static void dropNode(ArrayList<Integer> list[], int num) {
+		visited[num] = true;
+
+		for(int elem : list[num]) {
+			if (!visited[elem]) {
+				dropNode(list, elem);
+			}
+		}
+	}
+
+	private static boolean checkInitRoot(int n) {
+		for (int i = 0 ; i < n ; i++) {
+			if (visited[i] == true )
+				n--;
+		}
+		if (n == 1)
+			return true;
+		return false;
+	}
 	public static void main(String[] args) throws IOException {
-
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
 
-		int n = Integer.parseInt(st.nextToken());
+		int n = Integer.parseInt(br.readLine());
+		ArrayList<Integer> list[] = new ArrayList[n];
+		visited = new boolean[n];
+		int root = 0;
 
-		list = new ArrayList[n];
-		for (int i = 0 ; i < n ; i++){
+		for (int i = 0 ; i < n ; i++) {
 			list[i] = new ArrayList<>();
 		}
 
-		visited = new boolean[n];
-		leafNode = 0;
-
-		st = new StringTokenizer(br.readLine());
+		StringTokenizer st = new StringTokenizer(br.readLine());
 		for (int i = 0 ; i < n ; i++) {
-			int value = Integer.parseInt(st.nextToken());
-
-			if (value == -1) {
-				root = i;
+			int elem = Integer.parseInt(st.nextToken());
+			if (elem != -1) {
+				list[elem].add(i);
 			}
 			else {
-				list[i].add(value);
-				list[value].add(i);
+				root = i;
 			}
 		}
 
-		st = new StringTokenizer(br.readLine());
-		deleteNode = Integer.parseInt(st.nextToken());
 
-		if (deleteNode == root) {
-			System.out.println("0");
+		int m = Integer.parseInt(br.readLine());
+
+		dropNode(list, m);
+		
+		if (m == root) {
+			result = 0;
+		}
+		else if (checkInitRoot(n)) {
+			result = 1;
 		}
 		else {
-			DFS(root);
-			System.out.println(leafNode);
+			checkLeaf(list, root);
 		}
 
-	}
+		System.out.println(result);
 
-	private static void DFS(int node) {
-
-		visited[node] = true;
-		int chlidNode = 0;
-
-		for (int elem : list[node]) {
-			if (!visited[elem] && elem != deleteNode) {
-				DFS(elem);
-				chlidNode++;
-			}
-		}
-		if (chlidNode == 0) {
-			leafNode++;
-		}
 	}
 }
