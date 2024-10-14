@@ -1,57 +1,52 @@
-import javax.swing.*;
+
 import java.io.*;
-import java.nio.Buffer;
-import java.sql.Array;
-import java.util.*;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Scanner;
+import java.util.StringTokenizer;
 
-
-
+class hNode {
+	int index, value;
+	public hNode(int index, int value) {
+		this.value =value;
+		this.index = index;
+	}
+}
 public class Main {
 
-    static class Node {
-        public int index;
-        public int value;
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
+		Deque<hNode> queue = new LinkedList<>();
 
-        Node(int index, int value) {
-            this.index = index;
-            this.value = value;
-        }
-    }
-    public static void main(String[] args) throws IOException {
+		int input[] = new int[n];
+		st = new StringTokenizer(br.readLine());
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+		for (int i = 0 ; i < n ; i++) {
+			input[i] = Integer.parseInt(st.nextToken());
+		}
 
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
+		for (int i = 0 ; i < n ; i++) {
 
-        st = new StringTokenizer(br.readLine());
+			while (!queue.isEmpty() && queue.getLast().value > input[i])
+				queue.removeLast();
 
-        int [] arr = new int[n];
+			queue.add(new hNode(i, input[i]));
 
-        for(int i = 0 ; i < n ; i++)
-            arr[i] = Integer.parseInt(st.nextToken());
+			if (queue.getFirst().index <= i - m) {
+				queue.removeFirst();
+			}
+			bw.write(queue.getFirst().value + " ");
+		}
 
-        Deque<Node> myDeque = new LinkedList<>();
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
-        for(int i = 0 ; i < n ; i++) {
-
-
-            while(!myDeque.isEmpty() && myDeque.getLast().value > arr[i])
-                myDeque.removeLast();
-
-            Node node = new Node(i, arr[i]);
-            myDeque.addLast(node);
-
-            // remove
-            if(myDeque.getFirst().index < i - m + 1) {
-                myDeque.removeFirst();
-            }
-            bw.write(myDeque.getFirst().value + " ");
-        }
-        bw.flush();
-        bw.close();
-
-    }
+		bw.flush();
+		bw.close();
+	}
 }
+
+
+
