@@ -1,82 +1,78 @@
-import org.w3c.dom.Node;
 
 import java.io.*;
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
+class hNode {
+	int x,y;
+
+	public hNode(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+}
 
 public class Main {
 
-    public static void DFS(int map[][], boolean isVisited[][], Node input) {
+	private static int dx[] = {1, -1, 0, 0};
+	private static int dy[] = {0, 0, 1, -1};
+	private static 	int [][]input;
 
-        int dx[] = {0, 1, 0 , -1};
-        int dy[] = {1, 0, -1, 0};
+	private static int n,m;
+	private static boolean [][]visited;
 
-        Queue<Node> queue = new LinkedList<>();
-        queue.add(new Node(0,0));
-        isVisited[0][0] = true;
 
-        while (!queue.isEmpty()) {
-            Node now = queue.poll();
+	private static boolean isValid(int x, int y) {
+		if ((1 <= x  && x <= m) && (1 <= y && y <= n) && input[y][x] == 1)
+			return true;
+		return false;
+	}
+	private static void BFS(hNode node, int count) {
+		Queue<hNode> queue = new LinkedList<>();
+		visited[node.y][node.x] = true;
+		queue.add(node);
 
-            for (int i = 0 ; i < 4 ; i++) {
-                int x = now.x + dx[i];
-                int y = now.y + dy[i];
+		while(!queue.isEmpty()) {
+			hNode now = queue.poll();
 
-                if ((x >= 0 && x < input.x) && (y >= 0 && y < input.y)) {
-                    if (isVisited[x][y] == false && map[x][y] == 1) {
-                        isVisited[x][y] = true;
-                        map[x][y] = map[now.x][now.y] + 1;
-                        queue.add(new Node(x, y));
-                    }
-                }
-            }
+			for (int i = 0 ; i < 4 ; i++) {
+				int mx = now.x + dx[i];
+				int my = now.y + dy[i];
 
-        }
-    }
+				if (isValid(mx, my) && !visited[my][mx]) {
+					visited[my][mx] = true;
+					input[my][mx] = input[now.y][now.x] + 1;
+					queue.add(new hNode(mx, my));
+				}
+			}
+		}
 
-    public static class Node {
-        int x;
-        int y;
+	}
 
-        public Node(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-    public static void main(String[] args) throws IOException {
-       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		n = Integer.parseInt(st.nextToken());
+		m = Integer.parseInt(st.nextToken());
+		input = new int[n + 1][m + 1];
+		visited = new boolean[n + 1][m + 1];
 
-       String input[] = br.readLine().split(" ");
+		// 입력
+		for (int i = 1 ; i <= n ; i++) {
+			char elem[] = br.readLine().toCharArray();
+			for (int j = 1 ; j <= m ; j++) {
+				input[i][j] = elem[j - 1] - '0';
+			}
+		}
 
-       int n = Integer.parseInt(input[0]);
-       int m = Integer.parseInt(input[1]);
+		BFS(new hNode(1,1), 1);
 
-       int map[][] = new int[n][m];
+		System.out.println(input[n][m]);
 
-       for (int i = 0 ; i < n ; i++) {
-           StringTokenizer st = new StringTokenizer(br.readLine());
-           String s = st.nextToken();
-
-           for (int j = 0 ; j < m ; j++) {
-               map[i][j] = s.charAt(j) - '0';
-           }
-       }
-
-       boolean visited[][] = new boolean[n][m];
-
-       Node inputValue = new Node(n, m);
-
-       DFS(map,  visited, inputValue);
-
-//       for (int i = 0 ; i < n ; i++) {
-//           for (int j = 0 ; j < m ; j++)
-//               System.out.print(map[i][j]);
-//           System.out.println();
-//       }
-
-       System.out.println(map[n - 1][m - 1]);
-
-    }
+	}
 }
+
+
+
