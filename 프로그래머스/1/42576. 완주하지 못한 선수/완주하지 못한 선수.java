@@ -5,8 +5,11 @@ class Solution {
         HashMap<String, Integer> list = new HashMap<>();
         
         for (String elem: participant) {
-            int valueCnt = list.getOrDefault(elem, 0);
-            list.put(elem, valueCnt + 1);
+            int count = 0;
+            if (list.get(elem) != null) {
+	            count = list.get(elem);
+            }
+            list.put(elem, count + 1);
         }
         
         for (String elem: completion) {
