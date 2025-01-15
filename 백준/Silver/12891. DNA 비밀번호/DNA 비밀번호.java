@@ -1,32 +1,57 @@
 
 import java.io.*;
+import java.nio.Buffer;
 import java.util.Arrays;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class Main {
+	private static int array[] = new int[4];
 
-	private static boolean checkAlphaNum(int currentNum[], int neededNum[]) {
-
-		int count = 0;
-		for (int i = 0 ; i < 4 ; i++) {
-			if (currentNum[i] >= neededNum[i])
-				count++;
+	private static void plusValue(char c) {
+		switch (c) {
+			case 'A':
+				array[0]++;
+				break;
+			case 'C':
+				array[1]++;
+				break;
+			case 'G':
+				array[2]++;
+				break;
+			case 'T':
+				array[3]++;
+			default:
+				break;
 		}
-
-		if (count != 4)
-			return false;
+	}
+	private static void minusValue(char c) {
+		switch (c) {
+			case 'A':
+				array[0]--;
+				break;
+			case 'C':
+				array[1]--;
+				break;
+			case 'G':
+				array[2]--;
+				break;
+			case 'T':
+				array[3]--;
+			default:
+				break;
+		}
+	}
+	private static boolean checkValid(int value[]) {
+		for (int i = 0 ; i < 4 ; i++) {
+			if (array[i] < value[i])
+				return false;
+		}
 		return true;
 	}
-
-	private static int changeAlphaToNum(char c) {
-		if (c == 'A')
-			return 0;
-		else if (c == 'C')
-			return 1;
-		else if (c == 'G')
-			return 2;
-		else
-			return 3;
+	private static void sliceNext(char input[], int i, int m) {
+		minusValue(input[i]);
+		plusValue(input[i + m]);
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -36,55 +61,34 @@ public class Main {
 		int n = Integer.parseInt(st.nextToken());
 		int m = Integer.parseInt(st.nextToken());
 
-		int neededNum[] = new int[4];
-		int currentNum[] = new int[4];
-		int resultCnt = 0;
+		int value[] = new int[4];
+		int count = 0;
 
-		// 문자열 입력
 		char input[] = br.readLine().toCharArray();
-
-		// 첫 범위에서 알파뱃 수
 		for (int i = 0 ; i < m ; i++) {
-			if (input[i] == 'A')
-				currentNum[0]++;
-			else if (input[i] == 'C')
-				currentNum[1]++;
-			else if(input[i] == 'G')
-				currentNum[2]++;
-			else
-				currentNum[3]++;
+			plusValue(input[i]);
 		}
 
-		// 필요 알파뱃 수 입력
 		st = new StringTokenizer(br.readLine());
-		for (int i = 0 ; i < 4 ; i++) {
-			neededNum[i] = Integer.parseInt(st.nextToken());
-		}
+		value[0] = Integer.parseInt(st.nextToken());
+		value[1] = Integer.parseInt(st.nextToken());
+		value[2] = Integer.parseInt(st.nextToken());
+		value[3] = Integer.parseInt(st.nextToken());
 
-		// 시작
 
-		// 첫 배열 확인
-		if (checkAlphaNum(currentNum, neededNum)) {
-			resultCnt++;
-		}
 
 		for (int i = 0 ; i < n - m ; i++) {
-
-			int start = i;
-			int last = m + i;
-
-			start = changeAlphaToNum(input[start]);
-			last = changeAlphaToNum(input[last]);
-
-			currentNum[start]--;
-			currentNum[last]++;
-
-			if (checkAlphaNum(currentNum, neededNum)) {
-				resultCnt++;
-			}
+			if (checkValid(value))
+				count++;
+			sliceNext(input, i, m);
 		}
 
-		System.out.println(resultCnt);
+		if (checkValid(value))
+			count++;
 
+		System.out.println(count);
 	}
 }
+
+
+
