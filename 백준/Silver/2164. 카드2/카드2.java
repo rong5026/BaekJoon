@@ -1,25 +1,39 @@
-import javax.print.DocFlavor;
+
 import java.io.*;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+import java.util.Stack;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
+		Scanner input = new Scanner(System.in);
 
-        Scanner input = new Scanner(System.in);
+		int n = input.nextInt();
 
-        int n = input.nextInt();
-        Queue<Integer> queue = new LinkedList<>();
+		Queue<Integer> queue = new LinkedList<>();
 
-        for (int i = 1 ; i <= n ; i++) {
-            queue.add(i);
-        }
+		for (int i = 1 ; i <= n ; i++) {
+			queue.add(i);
+		}
 
-        while (queue.size() > 1) {
-            queue.poll();
-            queue.add(queue.poll());
-        }
+		int i = 1;
 
-        System.out.println(queue.poll());
-    }
+		while (queue.size() != 1) {
+
+			if (i % 2 == 1) {
+				queue.poll();
+			}
+			else {
+				int elem = queue.poll();
+				queue.add(elem);
+			}
+			i++;
+		}
+		System.out.println(queue.peek());
+	}
 }
+
+
+
