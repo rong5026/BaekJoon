@@ -1,62 +1,80 @@
-import java.io.*;
-import java.lang.reflect.Array;
-import java.util.*;
 
+import java.io.*;
+import java.sql.PreparedStatement;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
 
 public class Main {
 
-    public static int[] tmp;
+	private static int result[];
+	private static int idx = 0;
 
-    private static void merge(int arr[], int start, int last, int mid) {
-        int i = start;
-        int j = mid + 1;
-        int k = start;
+	private static void merge_sort(int[] input, int start, int last) {
 
-        while (i <= mid && j <= last) {
-            if (arr[i] <= arr[j])
-                tmp[k++] = arr[i++];
-            else
-                tmp[k++] = arr[j++];
-        }
-        while (i <= mid)
-            tmp[k++] = arr[i++];
-        while (j <= last)
-            tmp[k++] = arr[j++];
-        for(int l = start ; l <=last ; l++) {
-            arr[l] = tmp[l];
-        }
+		if (start == last) {
+			return;
+		}
 
-//        for(int f = 0 ; f < arr.length ; f++)
-//            System.out.print(arr[f] + " ");
-//        System.out.println();
-    }
-    private static void mergeSort(int arr[], int start, int last) {
-        if (last - start < 1)
-            return ;
-        int mid = (start + last) / 2;
-        mergeSort(arr, start, mid);
-        mergeSort(arr, mid + 1, last);
-        merge(arr, start, last, mid);
-    }
+		int mid = (start + last) / 2;
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		merge_sort(input, start, mid);
+		merge_sort(input, mid + 1, last);
+		merge(input, start, mid, last);
 
-        int n = Integer.parseInt(br.readLine());
+	}
 
-        int arr[] = new int[n];
-        tmp = new int[n];
 
-        for (int i = 0 ; i < n ; i++) {
-            arr[i] = Integer.parseInt(br.readLine());
-        }
-        mergeSort(arr, 0 , n - 1);
+	private static void merge(int[] input, int start, int mid, int last) {
 
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        
-        for(int i = 0 ; i  < n ; i++)
-            bw.write(arr[i] + "\n");
-        bw.flush();
-        bw.close();
-    }
+		int i = start;
+		int j = mid + 1;
+		int[] tmp = new int[last - start + 1];
+		int index  = 0;
+
+		while (i <= mid && j <= last) {
+			if (input[i] < input[j]) {
+				tmp[index++] = input[i++];
+			}
+			else {
+				tmp[index++] = input[j++];
+			}
+		}
+
+		while (i <= mid) {
+			tmp[index++] = input[i++];
+		}
+		while (j <= last) {
+			tmp[index++] = input[j++];
+		}
+		for (int k = 0; k < tmp.length; k++) {
+			input[start++] = tmp[k];
+		}
+	}
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		int n = Integer.parseInt(br.readLine());
+		int []input = new int[n];
+		result = new int[n];
+
+		for (int i = 0; i < n; i++) {
+			input[i] = Integer.parseInt(br.readLine());
+		}
+
+		merge_sort(input, 0, n - 1);
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+		for (int i = 0; i < n; i++) {
+			bw.write(input[i] + "\n");
+		}
+		bw.flush();
+		bw.close();
+	}
 }
+
+
+
