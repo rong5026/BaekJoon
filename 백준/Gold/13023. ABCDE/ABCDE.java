@@ -1,60 +1,60 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class Main {
-    static boolean arrive = false;
-    public static void DFS(int index, ArrayList<Integer> list[] , int visit[],int depth) {
+	private static ArrayList<Integer> list[];
+	private static boolean[] visited;
+	private static boolean isResultExist = false;
 
-        if (depth == 5 || arrive) {
-            arrive = true;
-            return ;
-        }
-        visit[index] = 1;
+	private static void DFS(int node, int depth) {
+		if (depth == 5) {
+			isResultExist = true;
+			return;
+		}
+		visited[node] = true;
+		for (int elem : list[node]) {
+			if (!visited[elem]) {
+				DFS(elem, depth + 1);
+			}
+		}
+		visited[node] = false;
+	}
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-        for(int i : list[index]) {
-            if (visit[i] == 0) {
-                DFS(i, list, visit, depth + 1);
-            }
-        }
-        visit[index] = 0;
-    }
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
 
-    public static void main(String[] args) throws IOException {
+		list = new ArrayList[n];
+		visited = new boolean[n];
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		for (int i = 0; i < n; i++) {
+			list[i] = new ArrayList<>();
+		}
 
-        String []str = br.readLine().split(" ");
+		for (int i = 0; i < m; i++) {
+			st = new StringTokenizer(br.readLine());
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			list[a].add(b);
+			list[b].add(a);
+		}
+		for (int i = 0; i < n; i++) {
+			if (isResultExist) {
+				break;
+			}
+			DFS(i, 1);
+		}
 
-        int n = Integer.parseInt(str[0]);
-        int m = Integer.parseInt(str[1]);
+		if (isResultExist) {
+			System.out.println("1");
+		}
+		else {
+			System.out.println("0");
+		}
 
-        ArrayList<Integer> list[]= new ArrayList[n];
-
-        for(int i = 0 ; i < n ; i++)
-            list[i] = new ArrayList<Integer>();
-        for(int i = 0 ; i < m ; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-
-            list[a].add(b);
-            list[b].add(a);
-        }
-        int []visit = new int[n];
-        int depth = 1;
-
-        for(int i = 0 ; i < n ; i++) {
-            if(visit[i] == 0) {
-                DFS(i, list, visit, depth);
-                if (arrive)
-                    break;
-            }
-        }
-        if (!arrive)
-            System.out.println("0");
-        else
-            System.out.println("1");
-    }
+	}
 }
