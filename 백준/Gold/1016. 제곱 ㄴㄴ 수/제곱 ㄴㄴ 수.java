@@ -1,35 +1,39 @@
-import java.io.IOException;
+
+import java.io.*;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
 
 	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st =  new StringTokenizer(br.readLine());
+		long min = Long.parseLong(st.nextToken());
+		long max = Long.parseLong(st.nextToken());
+		long elem;
+		boolean[] visited = new boolean[(int)(max - min) + 1];
+		int count =0;
 
-		Scanner input = new Scanner(System.in);
+		for (long i = 2 ; i <= Math.sqrt(max) ; i++) {
 
-		long min = input.nextLong();
-		long max = input.nextLong();
-		boolean check[] = new boolean[(int)(max - min + 1)];
-		long cnt = max - min + 1;
+			if (min % (i * i) == 0 ) {
+				elem = min / (i * i);
+			}
+			else {
+				elem = (min / (i * i)) + 1;
+			}
+			long start = elem * i * i;
 
-		for (long i = 2; i * i <= max ; i++) {
-			long pow = i * i;
-			long startValue = min / pow;
-
-			if (min % pow != 0)
-				startValue++;
-
-			for (long j = startValue; j * pow <= max; j++) {
-				int index = (int)(j * pow - min); // max의 범위가 min ≤ max ≤ min + 1,000,000 이므로
-				if (!check[index]) {
-					check[index] = true;
-					cnt--;
-				}
+			for (long j = start ; j <= max ; j += i*i) {
+				visited[(int)(j - min)] = true;
 			}
 		}
-		System.out.println(cnt);
 
-
+		for (int i = 0 ; i < max - min + 1 ; i++) {
+			if (!visited[i])
+				count++;
+		}
+		System.out.println(count);
 
 	}
 }
