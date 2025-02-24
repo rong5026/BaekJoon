@@ -1,42 +1,41 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+
+import java.io.*;
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
 class hNode {
-	int index;
-	int p, q;
+	int node, p, q;
 
-	public hNode(int index, int p, int q) {
-		this.index = index;
+	public hNode(int node, int p, int q) {
+		this.node = node;
 		this.p = p;
 		this.q = q;
 	}
-
-
 }
 
 public class Main {
 
-	static long result[];
-	static boolean visited[];
-	static ArrayList<hNode> input[];
+	private static int n;
+	private static ArrayList<hNode>[] nodes;
+	private static boolean[] visited;
+	private static long[] result;
 
-	private static long GCD(long a, long b) {
+	private static long gcd(long a, long b) {
 		if (b == 0)
 			return a;
-		return GCD(b, a % b);
+		return gcd(b, a % b);
 	}
 
-	private static void DFS(int index) {
-		visited[index] = true;
+	private static void dfs(int node) {
+		visited[node] = true;
 
-		for (hNode elem : input[index]) {
-			int next = elem.index;
-			if (!visited[next]) {
-				result[next] = result[index] * elem.q / elem.p;
-				DFS(next);
+		for (hNode elem : nodes[node]) {
+			int nextNode = elem.node;
+			if (!visited[nextNode]) {
+				result[nextNode] = result[node] * elem.q / elem.p;
+				dfs(nextNode);
 			}
 		}
 	}
@@ -44,43 +43,46 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		int n = Integer.parseInt(br.readLine());
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-		result = new long[n];
+		n = Integer.parseInt(st.nextToken());
+		nodes  = new ArrayList[n];
 		visited = new boolean[n];
-		input = new ArrayList[n];
-
-		for (int i = 0; i < n; i++) {
-			input[i] = new ArrayList<>();
-		}
+		result = new long[n];
 
 		long lcm = 1;
 
-		for (int i = 0; i < n - 1; i++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
+		for (int i = 0 ; i < n ; i++ ){
+			nodes[i] = new ArrayList<hNode>();
+		}
 
+		for (int i = 0 ; i < n - 1 ; i++) {
+			st = new StringTokenizer(br.readLine());
 			int a = Integer.parseInt(st.nextToken());
 			int b = Integer.parseInt(st.nextToken());
 			int p = Integer.parseInt(st.nextToken());
 			int q = Integer.parseInt(st.nextToken());
 
-			input[a].add(new hNode(b, p, q));
-			input[b].add(new hNode(a, q, p));
+			nodes[a].add(new hNode(b, p ,q));
+			nodes[b].add(new hNode(a, q, p));
 
-			lcm *= (p * q / GCD(p, q));
+			// 공배수 구하기
+			lcm *= (p * q / gcd(p, q));
 		}
 
 		result[0] = lcm;
+		dfs(0);
 
-		DFS(0);
+	
+		long mlcm = result[0];
 
-		long mgcd = result[0];
-		for (int i = 1; i < n; i++) {  // index 1부터 시작하여 mgcd를 계산
-			mgcd = GCD(mgcd, result[i]);
+		for (int i = 1 ; i < n ; i++) {
+			mlcm = gcd(mlcm, result[i]);
 		}
 
-		for (int i = 0; i < n; i++) {
-			System.out.print(result[i] / mgcd + " ");
+		for (int i = 0 ; i < n ; i++) {
+			System.out.print(result[i] / mlcm + " ");
 		}
+
 	}
 }
