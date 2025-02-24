@@ -1,37 +1,35 @@
-import org.w3c.dom.Node;
 
 import java.io.*;
-import java.lang.reflect.Array;
-import java.nio.Buffer;
-import java.util.*;
-
+import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
 
 
-    private static long GCD(long a, long b) {
+	private static long gcd(long a, long b) {
+		if (b == 0)
+			return a;
+		return gcd(b, a%b);
+	}
 
-        if (b == 0)
-            return a;
-        return (GCD(b, a % b));
-    }
-    public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		long a = Long.parseLong(st.nextToken());
+		long b= Long.parseLong(st.nextToken());
 
-        String input[] = br.readLine().split(" ");
+		long result = gcd(a, b);
 
-        long n = Long.parseLong(input[0]);
-        long m =  Long.parseLong(input[1]);
-        long count = GCD(n,m);
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        StringBuilder sb = new StringBuilder();
+		while (result != 0) {
+			bw.write("1");
+			result--;
+		}
 
-        while (count > 0) {
-            sb.append("1");
-            count--;
-        }
-        System.out.println(sb);
+		bw.flush();
+		bw.close();
 
-    }
+	}
 }
