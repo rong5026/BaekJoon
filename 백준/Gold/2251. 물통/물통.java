@@ -1,85 +1,69 @@
-import com.sun.source.tree.Tree;
-import org.w3c.dom.Node;
 
 import java.io.*;
-import java.nio.Buffer;
-import java.nio.file.LinkPermission;
-import java.sql.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
 
-    static TreeSet<Integer> result;
-    static boolean visited[][];
-    static int input[];
+	private static boolean[][] visited;
+	private static int sender[] = {0, 0, 1, 1, 2, 2};
+	private static int receiver[] = {1, 2, 0, 2, 0, 1};
+	private static int[] input;
+	private static PriorityQueue<Integer> result;
 
-    static int send[] = {0, 0, 1, 1, 2, 2};
-    static int receive[] = {1, 2, 0, 2, 0, 1};
+	private static void dfs(int a, int b) {
 
+		if (a == 0) {
+			result.add(input[2] - b);
+		}
 
-    private static void DFS(int a, int b) {
+		for (int i = 0 ; i < 6 ; i++) {
+			int value[] = {a, b, input[2] - a - b};
 
-        visited[a][b] = true;
+			int send = sender[i];
+			int receive = receiver[i];
 
-        int total = input[2];
+			// receive에서 수용가능 값
+			int remainValue = input[receive] - value[receive];
 
-        if (a == 0)
-            result.add(total - (a + b));
+			if (value[send] >= remainValue) {
+				value[receive] = input[receive];
+				value[send] = value[send] - remainValue;
+			}
+			else {
+				value[receive] += value[send];
+				value[send] = 0;
+			}
 
-        for (int i = 0 ; i < 6 ; i++) {
-            for (int j = 0 ; j < 6 ; j++) {
+			if (!visited[value[0]][value[1]]) {
+				visited[value[0]][value[1]] = true;
+				dfs(value[0], value[1]);
+			}
+		}
+	}
 
-                int value[] = {a, b, total - (a + b)};
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-                int sendIdx = send[i];
-                int receiveIdx = receive[j];
-                if (value[sendIdx] == 0 || value[receiveIdx] == input[receiveIdx]) { // 보내려는 값이 0, 받는 값이 꽉찼을때 넘어감
-                }
+		visited = new boolean[201][201];
+		input = new int[3];
+		result = new PriorityQueue<>();
 
-                int validReceiver = input[receiveIdx] - value[receiveIdx]; // 받는 부분에서 여분 공간
+		input[0] = Integer.parseInt(st.nextToken());
+		input[1] = Integer.parseInt(st.nextToken());
+		input[2] = Integer.parseInt(st.nextToken());
 
-                if (value[sendIdx] > validReceiver) { // 보내는 값이 여분보다 클 때
-                    value[sendIdx] -= validReceiver;
-                    value[receiveIdx] += validReceiver;
-                }
-                else {
-                    value[receiveIdx] += value[sendIdx];
-                    value[sendIdx] = 0;
-                }
+		visited[0][0] = true;
 
-                if (!visited[value[0]][value[1]]) { //  방문을 안했을 때
-                    DFS(value[0], value[1]);
-                }
+		dfs(0, 0);
 
-            }
-        }
-        // a가 풀일때 b - c ,
-    }
+		while (!result.isEmpty()){
+			System.out.print(result.poll() + " ");
+		}
 
-    public static void main(String[] args) throws IOException {
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        StringTokenizer st = new StringTokenizer(br.readLine());
-
-        input = new int[3];
-
-        input[0] = Integer.parseInt(st.nextToken());
-        input[1] = Integer.parseInt(st.nextToken());
-        input[2] = Integer.parseInt(st.nextToken());
-
-        result = new TreeSet<Integer>();
-        visited = new boolean[input[0] + 1][input[1] + 1];
-
-        visited[0][0] = true; // a, b 0일때
-
-
-        DFS(0, 0);
-
-
-        for (int i : result) {
-            System.out.print(i + " ");
-
-        }
-    }
+	}
 }
