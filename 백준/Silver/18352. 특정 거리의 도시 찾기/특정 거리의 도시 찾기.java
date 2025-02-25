@@ -1,78 +1,79 @@
-import org.w3c.dom.Node;
 
 import java.io.*;
-import java.lang.reflect.Array;
-import java.nio.Buffer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+class hNode{
+	int node, len;
+
+	public hNode(int node, int len) {
+		this.node = node;
+		this.len = len;
+	}
+}
 
 public class Main {
 
+	private static ArrayList<Integer> list[];
+	private static boolean[] visited;
+	private static int k;
+	private static int[] result;
 
-    private static void BFS(int num, int sumDistance[], ArrayList<Integer> list[], boolean visited[] ) {
+	private static void bfs(int start) {
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(start);
+		visited[start] = true;
 
-        Queue<Integer> queue = new LinkedList<Integer>();
+		while (!queue.isEmpty()) {
+			Integer elem = queue.poll();
 
-        visited[num] = true;
+			for (int next : list[elem]) {
+				if (!visited[next]) {
+					visited[next] = true;
+					queue.add(next);
+					result[next] = result[elem] + 1;
+				}
+			}
+		}
+	}
 
-        queue.add(num);
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-        while (!queue.isEmpty()) {
-            int now = queue.poll();
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
+		k = Integer.parseInt(st.nextToken());
+		int x = Integer.parseInt(st.nextToken());
+		visited = new boolean[n + 1];
+		list = new ArrayList[n + 1];
+		result = new int[n + 1];
 
-            for (int i : list[now]) {
-                if (!visited[i]) {
-                    visited[i] = true;
-                    sumDistance[i] = sumDistance[now] + 1;
-                    queue.add(i);
-                }
-            }
-        }
+		for (int i = 1 ; i <= n ; i++) {
+			list[i] = new ArrayList<>();
+		}
 
-    }
+		for (int i = 0 ; i < m ; i++) {
+			st = new StringTokenizer(br.readLine());
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			list[a].add(b);
+		}
 
-    public static void main(String[] args) throws IOException {
+		bfs(x);
+		boolean flag = false;
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        StringTokenizer st = new StringTokenizer(br.readLine());
-
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-        int K = Integer.parseInt(st.nextToken());
-        int X = Integer.parseInt(st.nextToken());
-
-        ArrayList<Integer> list[] = new ArrayList[N + 1];
-        boolean visited[] = new boolean[N + 1];
-        int sumDistance[] = new int[N + 1];
-        ArrayList<Integer> result = new ArrayList<>();
-
-        for (int i = 0 ; i < N + 1 ; i++) {
-            list[i] = new ArrayList<Integer>();
-        }
-
-        for (int i = 0 ; i < M ; i++) {
-            st = new StringTokenizer(br.readLine());
-
-            int firstCity = Integer.parseInt(st.nextToken());
-            int secondCity = Integer.parseInt(st.nextToken());
-            list[firstCity].add(secondCity);
-        }
-
-        BFS(X, sumDistance, list, visited);
-
-
-        for (int i = 1 ; i <= N ; i++) {
-            if (sumDistance[i] == K)
-                result.add(i);
-        }
-
-        if (result.isEmpty()) {
-            System.out.println("-1");
-        }
-        else {
-            Collections.sort(result);
-            for (int i = 0; i < result.size() ; i++)
-                System.out.println(result.get(i));
-        }
-    }
+		for (int i = 1 ; i <= n ; i++) {
+			if (result[i] == k) {
+				System.out.println(i);
+				flag = true;
+			}
+		}
+		if (!flag) {
+			System.out.println("-1");
+		}
+	}
 }
