@@ -1,82 +1,78 @@
-import org.w3c.dom.Node;
 
 import java.io.*;
-import java.nio.Buffer;
-import java.sql.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
+	private static ArrayList<Integer> list[];
+	private static int[] group;
+	private static boolean[] visited;
+	private static boolean flag = true;
 
-    static boolean visited[];
-    static int check[];
+	private static void dfs(int elem) {
+		visited[elem] = true;
 
-    static ArrayList<Integer> list[];
+		for (int next : list[elem]) {
+			if (!visited[next]) {
+				group[next] = (group[elem] + 1) % 2;
+				dfs(next);
+			}
+			else {
+				if (group[next] == group[elem]) {
+					flag = false;
+					break;
+				}
+			}
+		}
+	}
 
-    static boolean isOver;
-    private static void DFS(int num) {
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-        visited[num] = true;
+		int N = Integer.parseInt(st.nextToken());
 
-        for (int i : list[num]) {
-            if (!visited[i]) {
-                check[i] = (check[num] + 1) % 2;
-                DFS(i);
-            }
-            else if (check[i] == check[num]) {
-                isOver = false;
-            }
-        }
+		for (int i = 0 ; i < N ; i++) {
+			st = new StringTokenizer(br.readLine());
 
-    }
-    public static void main(String[] args) throws IOException {
+			int n = Integer.parseInt(st.nextToken());
+			int m = Integer.parseInt(st.nextToken());
+			list = new ArrayList[n + 1];
+			group = new int[n + 1];
+			visited = new boolean[n + 1];
+			flag = true;
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			for (int j = 1 ; j <= n ; j++) {
+				list[j] = new ArrayList<>();
+			}
 
-        int n = Integer.parseInt(br.readLine());
+			for (int j = 1 ; j <= m ; j++) {
+				st = new StringTokenizer(br.readLine());
+				int a = Integer.parseInt(st.nextToken());
+				int b = Integer.parseInt(st.nextToken());
 
-        for (int i = 0 ; i < n ; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
+				list[a].add(b);
+				list[b].add(a);
+			}
 
-            int node = Integer.parseInt(st.nextToken());
-            int edge = Integer.parseInt(st.nextToken());
+			for (int j = 1; j <= n ; j++) {
+				if (flag)
+					dfs(j);
+				else
+					break;
+			}
 
-            list = new ArrayList[node + 1];
+			if(flag) {
+				System.out.println("YES");
+			}
+			else {
+				System.out.println("NO");
+			}
 
-            for (int j = 0 ; j <= node ; j++)
-                list[j] = new ArrayList<>();
+		}
 
-            for (int j = 0 ; j < edge ; j++) {
-                st = new StringTokenizer(br.readLine());
-
-                int start = Integer.parseInt(st.nextToken());
-                int last = Integer.parseInt(st.nextToken());
-
-                list[start].add(last);
-                list[last].add(start);
-            }
-
-
-            visited = new boolean[node + 1];
-            check = new int[node + 1];
-            isOver = true;
-
-            for (int j = 1 ; j <= node ; j++) {
-
-
-                if (isOver)
-                    DFS(j);
-                else
-                    break;
-            }
-
-            if (isOver)
-                System.out.println("YES");
-            else
-                System.out.println("NO");
-
-        }
-
-
-
-    }
+	}
 }
