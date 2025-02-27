@@ -1,64 +1,72 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
+
+	private static ArrayList<Integer> list[];
+	private static int order[];
+	private static int result[];
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-		int n = Integer.parseInt(br.readLine());
-		ArrayList<Integer> list[] = new ArrayList[n + 1];
-		int time[] = new int[n + 1];
-		int value[] = new int[n + 1];
-		int result[] = new int[n + 1];
+		int n = Integer.parseInt(st.nextToken());
+		int[] times = new int[n + 1];
+		order = new int[n + 1];
+		result = new int[n + 1];
 
-		for (int i = 1; i <= n ; i++) {
+		list = new ArrayList[n + 1];
+		for (int i = 0; i <= n; i++) {
 			list[i] = new ArrayList<>();
 		}
 
+		// input
 		for (int i = 1 ; i <= n ; i++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
+			st = new StringTokenizer(br.readLine());
+			times[i] = Integer.parseInt(st.nextToken());
 
-			time[i] = Integer.parseInt(st.nextToken());
-			int tower = 0;
-			while (true) {
-				tower = Integer.parseInt(st.nextToken());
-				if (tower == -1) {
-					break;
-				}
-				list[tower].add(i);
-				value[i]++;
+			int elem = Integer.parseInt(st.nextToken());
+			while (elem != -1) {
+				list[elem].add(i);
+				order[i]++;
+				elem = Integer.parseInt(st.nextToken());
 			}
 		}
 
 		Queue<Integer> queue = new LinkedList<>();
 
-		for (int i = 1 ; i <= n ; i++){
-			if (value[i] == 0) {
+		for (int i = 1 ; i <= n ; i++) {
+			if (order[i] == 0) {
 				queue.add(i);
 			}
 		}
 
-
 		while (!queue.isEmpty()) {
 			int elem = queue.poll();
 
-			for (int next : list[elem]) {
-				value[next]--;
-				result[next] =  Math.max(result[next], result[elem] + time[elem]);
-				if (value[next] == 0)
+			result[elem] += times[elem];
+
+			for (int next: list[elem]) {
+				order[next]--;
+
+				result[next] = Math.max(result[elem], result[next]);
+
+				if (order[next] == 0) {
 					queue.add(next);
+				}
 			}
 		}
 
-		for (int i = 1 ; i<= n ; i++){
-			result[i] += time[i];
+		for (int i = 1 ; i <= n ; i++) {
 			System.out.println(result[i]);
 		}
+
+
 	}
 }
