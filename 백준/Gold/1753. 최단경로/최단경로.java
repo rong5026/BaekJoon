@@ -1,88 +1,86 @@
+
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 class hNode {
-    int v;
-    int w;
-
-    hNode(int v, int w) {
-        this.v = v;
-        this.w = w;
-    }
+	int node, value;
+	public hNode(int node, int value) {
+		this.node = node;
+		this.value = value;
+	}
 }
 
 public class Main {
 
-    public static int array[];
-    public static ArrayList<hNode> list[];
-    public static boolean visited[];
+	private static ArrayList<hNode> list[];
+	private static int[] map;
 
-    private static void init(int v, int k) {
-        for (int i = 1 ; i <= v ; i++) {
-            if (i == k)
-                array[i] = 0;
-            else
-                array[i] = 99999999;
-            list[i] = new ArrayList<>();
-        }
-    }
+	private static void bfs(int start) {
+		PriorityQueue<hNode> queue = new PriorityQueue<>(Comparator.comparingInt(o -> o.value));
+		queue.add(new hNode(start, 0));
 
-    public static void main(String[] args) throws IOException {
+		while (!queue.isEmpty()) {
+			hNode elem = queue.poll();
+			for (hNode next: list[elem.node]) {
+				if (map[next.node] > map[elem.node] + next.value) {
+					map[next.node] = map[elem.node] + next.value;
+					queue.add(new hNode(next.node, map[next.node]));
+				}
+			}
+		}
+	}
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int v = Integer.parseInt(st.nextToken());
-        int e = Integer.parseInt(st.nextToken());
-        int k = Integer.parseInt(br.readLine());
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
+		int start = Integer.parseInt(br.readLine());
 
-        list = new ArrayList[v + 1];
-        array = new int[v + 1];
-        visited = new boolean[v + 1];
 
-        init(v, k);
+		// 초기화
+		map = new int[n + 1];
+		list = new ArrayList[n + 1];
 
-        for (int i = 0 ; i < e ; i++) {
-            st = new StringTokenizer(br.readLine());
+		for (int i = 1 ; i <= n ; i++) {
+			list[i] = new ArrayList<>();
+			if (i != start) {
+				map[i] = Integer.MAX_VALUE;
+			}
+		}
 
-            int uValue = Integer.parseInt(st.nextToken());
-            int vValue = Integer.parseInt(st.nextToken());
-            int wValue = Integer.parseInt(st.nextToken());
+		// 입력
+		for (int i = 1 ; i <= m ; i++) {
+			st = new StringTokenizer(br.readLine());
 
-            list[uValue].add(new hNode(vValue, wValue));
-        }
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			int c = Integer.parseInt(st.nextToken());
 
-        PriorityQueue<hNode> pq = new PriorityQueue<>(Comparator.comparingInt(node -> node.w));
-        pq.add(new hNode(k, 0));
+			list[a].add(new hNode(b, c));
+		}
 
-        while (!pq.isEmpty()) {
-            hNode now = pq.poll();
-            int nowV = now.v;
-            int nowW = now.w;
+		bfs(start);
 
-            if (visited[nowV])
-                continue;
-            visited[nowV] = true;
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-            for (hNode next : list[nowV]) {
-                int nextV = next.v;
-                int nextW = next.w;
+		for (int i = 1; i <= n ; i++) {
+			if (map[i] == Integer.MAX_VALUE) {
+				bw.write("INF\n");
+			}
+			else {
+				bw.write(map[i]+"\n");
+			}
+		}
 
-                if (array[nextV] > nowW + nextW) {
-                    array[nextV] = nowW + nextW;
-                    pq.add(new hNode(nextV, array[nextV]));
-                }
-            }
-        }
+		bw.flush();
+		bw.close();
 
-        for (int i = 1; i <= v ; i++) {
-            if (array[i] == 99999999)
-                bw.write("INF\n");
-            else
-                bw.write(array[i] + "\n");
-        }
-        bw.flush();
-        bw.close();
-    }
+	}
 }
