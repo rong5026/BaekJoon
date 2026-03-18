@@ -1,42 +1,40 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
 
+//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    public static void changeIndex(ArrayList<String> array) {
+		int n = Integer.parseInt(br.readLine());
+		Set<String> list = new HashSet<String>();
 
-        for(int i = 1 ; i < array.size() ; i++) {
-            for(int j  = 0 ; j < array.size() - i ; j++){
-                if(array.get(j).length() > array.get(j+1).length()) {
-                    Collections.swap(array, j , j + 1);
-                }
-            }
+		for (int i = 0 ; i < n ; i++) {
+			list.add(br.readLine());
+		}
 
-        }
-    }
+		String[] array = list.toArray(new String[0]);
 
-    public static void main(String[] args) throws IOException {
+		Arrays.sort(array, (a, b) -> {
+			if (a.length() != b.length()) {
+				return a.length() - b.length();
+			}
+			return a.compareTo(b);
+		});
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 
-        int n = Integer.parseInt(br.readLine());
-
-        Set<String> strArray = new TreeSet<String>();
-
-        String array;
-
-        for(int i = 0 ; i < n ; i++) {
-            array = br.readLine();
-            strArray.add(array);
-        }
-
-        ArrayList<String> result = new ArrayList<String>(strArray);
-        changeIndex(result);
-
-        for(int i = 0 ; i < result.size() ; i++) {
-            System.out.println(result.get(i));
-        }
-    }
+		for (String s : array) {
+			sb.append(s).append("\n");
+		}
+		System.out.print(sb);
+	}
 }
