@@ -2,31 +2,23 @@ import java.util.*;
 class Solution {
     public String solution(String[] participant, String[] completion) {
         
-        HashMap<String, Integer> list = new HashMap<>();
+        HashMap<String, Integer> map = new HashMap<>();
         
-        for (String elem: participant) {
-            int count = 0;
-            if (list.get(elem) != null) {
-	            count = list.get(elem);
-            }
-            list.put(elem, count + 1);
+        for (String p : participant) {
+            map.put(p, map.getOrDefault(p ,0) + 1);
+        }
+        for (String c : completion) {
+            map.put(c, map.get(c) - 1);
         }
         
-        for (String elem: completion) {
-            int valueCnt = list.get(elem);
-            if (valueCnt == 1) {
-                list.remove(elem);
-            }
-            else {
-                list.put(elem, valueCnt - 1);
+        for (String name : map.keySet()) {
+            int cnt = map.get(name);
+            
+            if (cnt > 0) {
+                return name;
             }
         }
         
-         for (String key : list.keySet()) {
-           if (list.get(key) == 1) {
-                return key;
-            }
-        }
         return "";
 
     }
